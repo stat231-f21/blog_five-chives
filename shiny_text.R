@@ -13,6 +13,7 @@ abstract_list <- read_csv("abstract_list.csv") %>%
   mutate(abstract = str_replace(abstract, "\n", ""))
 
 set.seed(83426)
+theme_set(theme_classic())
 
 ######
 #data wrangling
@@ -23,14 +24,9 @@ abstract_words_all <- abstract_list %>%
   select(publication_year, abstract) %>% 
   unnest_tokens(output = word, input = abstract)
 
-#load in stop wrods from tidytext package
-data(stop_words)
-
 #words to keep 
-keep_empty <- stop_words %>% 
-  select(word) %>% 
-  filter(is.na(word))
-keep_words <- keep_empty %>% 
+empty <- data.frame(word = character())
+keep_words <- empty %>% 
   add_row(word = c("disease", "age", "cancer", "women", "population", "hiv", "social", 
                    "clinical", "children", "infection", "protein", "genetic", "blood", 
                    "cardiovascular", "community", "diabetes", "heart", "exposure", 
@@ -46,6 +42,12 @@ keep_words <- keep_empty %>%
                    "antibody", "pulmonary", "renal", "policy", "efforts", "female", 
                    "sexual", "depression", "behavioral", "influenza", "economic", "genome", 
                    "urban", "ethnicity"))
+
+#words of interest
+interest_words <- empty %>% 
+  add_row(word = c("social", "disparities", "age", "genetic", "cancer", "community", 
+                   "genetic", "cancer", "community", "genetic", "environmental", "family", 
+                   "racial", "demographic", "economic", "exposure"))
 
 #only keep stop words in data
 abstract_words <- abstract_words_all %>% 
@@ -116,42 +118,44 @@ server <- function(input, output) {
 
   
   output$network <- renderPlot({
-    #choose top ten words from year
-    ten_words <- abstract_words %>% 
+    #choose interest words from year
+    network_words <- abstract_words %>% 
       filter(publication_year == input$year_b) %>% 
-      count(word, sort = TRUE) %>% 
-      slice(1:10) 
+      filter(word %in% interest_words$word) %>% 
+      count(word, sort = TRUE)
     #create dataframe
     df <- abstract_list %>%
       select(pmid, publication_year, abstract) %>%
       filter(publication_year == input$year_b) %>% 
-      unnest_tokens(output = word, input = abstract) %>%
-      right_join(ten_words, by = "word") %>%
-      unique() %>%
+      unnest_tokens(output = word, input = abstract) %>% #unnests words
+      right_join(network_words, by = "word") %>% #only keeps interest words
+      unique() %>% #remove repeats of connections in same abstract
         select(pmid, word) %>%
         table() %>%
-        crossprod()
-    diag(df) <- 0
-    df <- as.data.frame(df)
+        crossprod() #creates co-occurence matrix
+    diag(df) <- 0 #sets connections between same word to 0
+    df <- as.data.frame(df) 
+    
+    num_word <- ncol(df) 
 
     #define vertices and edges
-    ve <- ten_words 
+    ve <- network_words 
     ed <- df %>%
       dplyr::mutate(from = rownames(.)) %>%
-      tidyr::gather(to, weight, 1:10) %>%
+      tidyr::gather(to, weight, 1:num_word) %>% #gathers co-instances from matrix
       dplyr::mutate(weight = ifelse(weight == 0, NA, weight))
 
     #create igraph
     abst_igraph <- graph_from_data_frame(d = ed,
                                          vertices = ve,
                                          directed = FALSE) %>%
-      simplify()
+      simplify() #remove duplicate edges
 
     #plot network
     abst_network <- ggnetwork(abst_igraph)
     ggplot(data = abst_igraph, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
-      geom_edges(color = "lightgray") +
+      geom_edges(aes(size = weight), color = "lightgray") +
       geom_nodes() +
       geom_nodelabel(aes(label = name, size = n), nudge_x = .01) +
       theme_blank()
@@ -162,6 +166,8 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 
-#note: filter by year and top number of words!
+################
+
+
 
 
