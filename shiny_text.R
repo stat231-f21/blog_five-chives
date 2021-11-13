@@ -77,7 +77,7 @@ ui <- navbarPage(
       
       sidebarPanel(
         sliderInput("year_a", "Year:",
-                    min = 1975, max = 2021,
+                    min = 1985, max = 2021,
                     value = 2010, sep = "", 
                     animate = animationOptions(interval = 500, loop = TRUE))), 
       
@@ -91,7 +91,7 @@ ui <- navbarPage(
     sidebarLayout(
       sidebarPanel(
         sliderInput("year_b", "Year:",
-                   min = 1990, max = 2021,
+                   min = 1985, max = 2021,
                    value = 2010)
       ),
       mainPanel(plotOutput(outputId = "network"))
