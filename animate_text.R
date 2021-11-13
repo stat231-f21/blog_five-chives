@@ -42,14 +42,14 @@ anim <- ggplot(abstract_count, aes(rank, group = word,
         plot.margin = margin(2, 2, 2, 2, "cm")
         ) +
   transition_states(publication_year, 
-                    transition_length = 6, state_length = 2, wrap = FALSE) +
+                    transition_length = 8, state_length = 4, wrap = FALSE) +
   view_follow(fixed_x = TRUE)  +
   ease_aes('sine-in-out') +
   labs(title = 'Words in research abstracts exploring mortality: {closest_state}',  
        subtitle  =  "Top 10 Words",
        caption  = "Data Source: PubMed") 
 
-animate(anim, 400, fps = 20,  width = 1200, height = 1000, 
+animate(anim, 500, fps = 20,  width = 1200, height = 1000, 
         renderer = gifski_renderer("data/gganim.gif"), end_pause = 15, start_pause =  15) 
 
 
