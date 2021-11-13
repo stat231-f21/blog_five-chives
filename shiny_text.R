@@ -9,9 +9,10 @@ library(shiny)
 
 
 #read in list of abstracts
-abstract_list <- read_csv("abstract_list.csv") %>% 
+abstract_list <- read_csv("data/abstract_list.csv") %>% 
   mutate(abstract = str_replace(abstract, "\n", ""))
 
+#set seed and theme
 set.seed(83426)
 theme_set(theme_classic())
 
@@ -43,13 +44,13 @@ keep_words <- empty %>%
                    "sexual", "depression", "behavioral", "influenza", "economic", "genome", 
                    "urban", "ethnicity"))
 
-#words of interest
+#set words of interest
 interest_words <- empty %>% 
   add_row(word = c("social", "disparities", "age", "genetic", "cancer", "community", 
                    "genetic", "cancer", "community", "genetic", "environmental", "family", 
                    "racial", "demographic", "economic", "exposure"))
 
-#only keep stop words in data
+#only retain selected keep words in data 
 abstract_words <- abstract_words_all %>% 
   right_join(keep_words, by = "word")
 
@@ -77,8 +78,9 @@ ui <- navbarPage(
       
       sidebarPanel(
         sliderInput("year_a", "Year:",
-                    min = 1964, max = 2021,
-                    value = 2010)), 
+                    min = 1975, max = 2021,
+                    value = 2010, sep = "", 
+                    animate = animationOptions(interval = 500, loop = TRUE))), 
       
       mainPanel(plotOutput(outputId = "count")) 
     )
@@ -98,13 +100,18 @@ ui <- navbarPage(
   )
 )
 
+######
+#server
+######
+
 server <- function(input, output) {
   
+  #plot for word count chart
   output$count <- renderPlot({
     abstract_words %>% 
       filter(publication_year == input$year_a) %>% 
-      count(word, sort = TRUE) %>% 
-      slice(1:10) %>%
+      count(word, sort = TRUE) %>% #calculate counts
+      slice(1:10) %>% #choose top 10
       ggplot(aes(x = reorder(word, n), y = n, 
                  color = word, fill = word)) +
       geom_col() +
@@ -116,13 +123,13 @@ server <- function(input, output) {
   })
   
 
-  
+  #network
   output$network <- renderPlot({
     #choose interest words from year
     network_words <- abstract_words %>% 
       filter(publication_year == input$year_b) %>% 
       filter(word %in% interest_words$word) %>% 
-      count(word, sort = TRUE)
+      count(word, sort = TRUE) #get counts of words
     #create dataframe
     df <- abstract_list %>%
       select(pmid, publication_year, abstract) %>%

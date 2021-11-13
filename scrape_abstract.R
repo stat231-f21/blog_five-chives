@@ -4,10 +4,10 @@ library(tidyverse)
 library(fulltext)
 
 #read in csv's of citations (split iinto 4 csvs)
-set1 <- read_csv("csv-mortalityT-set.csv")
-set2 <- read_csv("csv-mortalityT-set-2.csv")
-set3 <- read_csv("csv-mortalityT-set-3.csv")
-set4 <- read_csv("csv-mortalityT-set-4.csv")
+set1 <- read_csv("data/csv-mortalityT-set.csv")
+set2 <- read_csv("data/csv-mortalityT-set-2.csv")
+set3 <- read_csv("data/csv-mortalityT-set-3.csv")
+set4 <- read_csv("data/csv-mortalityT-set-4.csv")
 
 #combine and clean up data
 citations <- set1 %>% 
@@ -45,5 +45,5 @@ for (x in 1:37076) {
 #   filter(is.na(abstract))
 
 #write csv
-write_csv(citations, "abstract_list.csv")
+write_csv(citations, "data/abstract_list.csv")
 
