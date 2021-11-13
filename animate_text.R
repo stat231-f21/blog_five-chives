@@ -12,6 +12,8 @@ abstract_words <- read_csv("data/abstract_words.csv") %>%
 #set theme
 theme_set(theme_classic())
 
+###NOTE: change color assignment and highlight sociodemographic words of interest
+
 #calculate count of words 
 abstract_count <- abstract_words %>% 
   filter(publication_year >= 1985) %>% #earlier years insufficient data
