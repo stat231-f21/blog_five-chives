@@ -1,5 +1,5 @@
 ---
-title: "Your Project Title Here"
+title: "Environmental and Sociodemographic Determinants of Mortality in the US"
 author: "Your Names Here"
 date: "Add a date"
 output:
@@ -11,6 +11,10 @@ output:
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(kableExtra) # for example code; delete if not needed
+library(tidytext)
+library(textdata)
+library(gganimate)
+library(gifski)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
@@ -21,6 +25,37 @@ knitr::opts_chunk$set(echo = FALSE,
 # Set R environment options
 options(knitr.kable.NA = '')
 ```
+
+# Introduction
+
+## Background information
+
+
+# Data
+
+
+# Results
+
+## Interactive map
+
+## Relationships by county
+
+## Research abstract analysis
+
+![](data/gganim.gif)
+
+
+```{r network}
+
+```
+
+
+
+# Conclusion
+
+## Limitations
+
+<!-- beginning of template -->
 
 # Header 1 (Section heading)
 
