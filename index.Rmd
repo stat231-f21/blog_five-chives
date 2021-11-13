@@ -11,14 +11,10 @@ output:
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(kableExtra) # for example code; delete if not needed
-library(tidytext)
-library(textdata)
-library(gganimate)
-library(gifski)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
-                      mesage = FALSE,
+                      message = FALSE,
                       warning = FALSE,
                       fig.align = "center")
 
@@ -33,8 +29,13 @@ options(knitr.kable.NA = '')
 
 # Data
 
+In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). [[ADD MORE HERE]]
+
+In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see [[INSERT LINK]] for the full list of retained words).
 
 # Results
+
+<!-- could be interesting to start this section off with a simple but summative scatterplot (doesn't even have to be interactive) that shows overall relationship between mortality (response variable) and predictors of interest, including EQI, income, etc. (choose these based off of which factors are highlighted in our maps) -->
 
 ## Interactive map
 
@@ -42,11 +43,22 @@ options(knitr.kable.NA = '')
 
 ## Research abstract analysis
 
+```{r barchart-code, echo = TRUE, results = 'hide'}
+#code to understand animation
+```
+
+
 ![](data/gganim.gif)
 
 
-```{r network}
+```{r network-code, echo = TRUE, results = 'hide'}
+#code to understand network
+```
 
+
+```{r network-display}
+#embed shiny app once published
+#knitr::include_app("https://your-account.shinyapps.io/your-app/", height = "600px")
 ```
 
 
