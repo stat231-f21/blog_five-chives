@@ -7,7 +7,8 @@ library(gifski)
 
 #read in data
 abstract_words <- read_csv("data/abstract_words.csv") %>% 
-  mutate(abstract = str_replace(abstract, "\n", ""))
+  mutate(abstract = str_replace(abstract, "\n", "")) %>% 
+  filter(word != "mortality") 
 
 #set theme
 theme_set(theme_classic())
@@ -20,7 +21,7 @@ abstract_count <- abstract_words %>%
   group_by(publication_year) %>% 
   count(word, sort = TRUE) %>% #calculate counts
   slice(1:10) %>% 
-  mutate(rank = rank(-n)) %>% #add rank 
+  mutate(rank = rank(-n), n = as.integer(n)) %>% #add rank 
   ungroup()
 
 #create animation
@@ -32,7 +33,7 @@ anim <- ggplot(abstract_count, aes(rank, group = word,
                 width = 0.9), alpha = 0.8, color = NA) + #bars
   #horizontal axis label
   geom_text(aes(y = 0, label = paste(word, " ")), vjust = 0.2, hjust = 1) +
-  geom_text(aes(y = n, label = trunc(n), hjust = 0)) + #labels of counts
+  geom_text(aes(y = n, label = as.integer(n), hjust = 0)) + #labels of counts
   coord_flip(clip = "off", expand = FALSE) + #flip coordinates
   #set scales
   scale_y_continuous(labels = scales::comma) +
