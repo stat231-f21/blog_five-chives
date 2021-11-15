@@ -7,7 +7,6 @@ library(gifski)
 
 #read in data
 abstract_words <- read_csv("data/abstract_words.csv") %>% 
-  mutate(abstract = str_replace(abstract, "\n", "")) %>% 
   filter(word != "mortality") 
 
 #set theme
