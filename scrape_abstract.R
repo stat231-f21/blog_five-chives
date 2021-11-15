@@ -47,3 +47,34 @@ for (x in 1:37076) {
 #write csv
 write_csv(citations, "data/abstract_list.csv")
 
+#unnest tokens (individual words) and retain year
+abstract_words_all <- abstract_list %>%
+  mutate(abstract = str_replace(abstract, "\n", "")) %>% 
+  select(pmid, publication_year, abstract) %>%
+  unnest_tokens(output = word, input = abstract) 
+
+#words to keep
+empty <- data.frame(word = character())
+keep_words <- empty %>%
+  add_row(word = c("disease", "age", "cancer", "women", "population", "hiv", "social",
+                   "clinical", "children", "infection", "protein", "genetic", "blood",
+                   "cardiovascular", "community", "diabetes", "heart", "exposure",
+                   "gene", "national", "drug", "chronic", "physical", "virus",
+                   "hospital", "sex", "smoking", "therapy", "interventions", "white",
+                   "genes", "family", "race", "weight", "education", "alcohol",
+                   "breast", "maternal", "antibodies", "lung", "income", "disparities",
+                   "environmental", "obesity", "tumor", "region", "african", "stroke",
+                   "cardiac", "viral", "hypertension", "immune", "respiratory", "hispanic",
+                   "food", "infections", "dna", "infant", "gender", "socioeconomic",
+                   "history", "coronary", "racial", "demographic", "mental", "male",
+                   "underlying", "child", "infants", "poor", "ethnic", "rural",
+                   "antibody", "pulmonary", "renal", "policy", "efforts", "female",
+                   "sexual", "depression", "behavioral", "influenza", "economic", "genome",
+                   "urban", "ethnicity"))
+
+#only retain selected keep words in data
+abstract_words <- abstract_words_all %>%
+  right_join(keep_words, by = "word")
+
+write_csv(abstract_words, "data/abstract_words.csv")
+
