@@ -56,7 +56,7 @@ abstract_words_all <- abstract_list %>%
 #words to keep
 empty <- data.frame(word = character())
 keep_words <- empty %>%
-  add_row(word = c("disease", "age", "cancer", "women", "population", "hiv", "social",
+  add_row(word = c("mortality", "disease", "age", "cancer", "women", "population", "hiv", "social",
                    "clinical", "children", "infection", "protein", "genetic", "blood",
                    "cardiovascular", "community", "diabetes", "heart", "exposure",
                    "gene", "national", "drug", "chronic", "physical", "virus",
