@@ -6,7 +6,7 @@ library(kableExtra)
 library(ggnetwork)
 library(igraph)
 library(shiny)
-
+library(dplyr)
 
 #read in list of abstracts
 abstract_words <- read_csv("data/abstract_words.csv") 
@@ -43,11 +43,26 @@ theme_set(theme_classic())
 #                    "sexual", "depression", "behavioral", "influenza", "economic", "genome", 
 #                    "urban", "ethnicity"))
 
-#set words of interest
-interest_words <- empty %>% 
-  add_row(word = c("social", "disparities", "age", "genetic", "cancer", "community", 
-                   "genetic", "cancer", "community", "genetic", "environmental", "family", 
-                   "racial", "demographic", "economic", "exposure"))
+empty <- data.frame(word = character(), category = factor())
+
+# #set words of interest
+# interest_words <- empty %>% 
+#   add_row(word = c("social", "disparities", "age", "genetic", "cancer", "community", 
+#                    "genetic", "cancer", "community", "genetic", "environmental", "family", 
+#                    "racial", "demographic", "economic", "exposure"))
+
+interest_words <- empty %>%
+  add_row(word = c("mortality", "social", "disparities", "cancer", "community",
+                   "genetic", "environmental", "family",
+                   "racial", "demographic", "economic", "exposure"), 
+          category = c(NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)) %>% 
+  mutate(category = case_when(
+            word %in% c("mortality", "cancer") ~ "mortality", 
+            word %in% c("social", "disparities", "racial", "demographic", 
+                        "economic") ~ "sociodemographic", 
+            word %in% c("community", "family") ~ "contextual", 
+            word %in% c("genetic") ~ "genetic", 
+            word %in% c("environmental", "exposure"), ~ "exposure"))
 
 # #only retain selected keep words in data 
 # abstract_words <- abstract_words_all %>% 
@@ -108,7 +123,7 @@ server <- function(input, output) {
   #plot for word count chart
   output$count <- renderPlot({
     abstract_words %>% 
-      filter(publication_year == input$year_a) %>% 
+      filter(publication_year == input$year_a & word != "mortality") %>% 
       count(word, sort = TRUE) %>% #calculate counts
       slice(1:10) %>% #choose top 10
       ggplot(aes(x = reorder(word, n), y = n, 
@@ -130,10 +145,8 @@ server <- function(input, output) {
       filter(word %in% interest_words$word) %>% 
       count(word, sort = TRUE) #get counts of words
     #create dataframe
-    df <- abstract_list %>%
-      select(pmid, publication_year, abstract) %>%
+    df <- abstract_words %>%
       filter(publication_year == input$year_b) %>% 
-      unnest_tokens(output = word, input = abstract) %>% #unnests words
       right_join(network_words, by = "word") %>% #only keeps interest words
       unique() %>% #remove repeats of connections in same abstract
         select(pmid, word) %>%
@@ -147,9 +160,9 @@ server <- function(input, output) {
     #define vertices and edges
     ve <- network_words 
     ed <- df %>%
-      dplyr::mutate(from = rownames(.)) %>%
+      mutate(from = rownames(.)) %>%
       tidyr::gather(to, weight, 1:num_word) %>% #gathers co-instances from matrix
-      dplyr::mutate(weight = ifelse(weight == 0, NA, weight))
+      mutate(weight = ifelse(weight == 0, NA, weight))
 
     #create igraph
     abst_igraph <- graph_from_data_frame(d = ed,
@@ -161,10 +174,16 @@ server <- function(input, output) {
     abst_network <- ggnetwork(abst_igraph)
     ggplot(data = abst_igraph, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
-      geom_edges(aes(size = weight), color = "lightgray") +
-      geom_nodes() +
-      geom_nodelabel(aes(label = name, size = n), nudge_x = .01) +
-      theme_blank()
+      geom_edges(aes(size = weight), 
+                    color = "lightgray", curvature = .1) +
+      geom_nodes(aes(size = n), shape = 20, color = "black")  +
+      geom_nodetext_repel(aes(label = name, size = n), repel = TRUE, 
+                    point.padding = unit(0.2, "lines"), color = "gray10") +
+      ggraph::scale_edge_width(c(0.5, 5)) +
+      # geom_nodes() +
+      # geom_nodelabel(aes(label = name, size = n), nudge_x = .01) +
+      theme_blank() +
+      labs(size = "Number")
 
   })
 }
