@@ -9,7 +9,7 @@ library(shiny)
 library(dplyr)
 
 #read in list of abstracts
-abstract_words <- read_csv("data/abstract_words.csv") 
+abstract_words <- read_csv("text_analysis/abstract_words.csv") 
 
 #set seed and theme
 set.seed(83426)
