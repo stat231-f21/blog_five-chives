@@ -62,6 +62,7 @@ In order to analyze research pertaining to mortality causes, we scraped abstract
 
 ![](data/gganim2.gif)
 
+In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts. 
 
 ```{r network-code, echo = TRUE, eval = FALSE}
 #code to understand network
@@ -218,6 +219,8 @@ options = list(height = 600)
 )
 
 ```
+
+In the above network, sociodemographic factors tend to be on the edge of the network in earlier years, and the networks tend to be more disconnected. As the years progress, though, at around 2010-2013, the network tend to become much more connected. From 2013-2021, sociodemographic factors also tend to become more and more central to the network. 
 
 # Conclusion
 
