@@ -178,7 +178,7 @@ server <- function(input, output) {
 
     #plot network
     abst_network <- ggnetwork(abst_igraph)
-    ggplot(data = abst_igraph, aes(x = x, y = y,
+    ggplot(data = abst_network, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
       geom_edges(aes(size = weight), 
                     color = "lightgray", curvature = .1) +
