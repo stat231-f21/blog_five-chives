@@ -121,7 +121,7 @@ shinyApp(
 ui <- fluidPage(
   
   # tabPanel(
-    titlePanel("Network of words used in research abstracts exploring mortality causes"),
+    titlePanel("Words used in research abstracts exploring causes of mortality"),
 
     sidebarLayout(
       sidebarPanel(
@@ -205,7 +205,7 @@ server <- function(input, output) {
       theme_blank() +
       labs(size = "Number", color = "Category", 
            caption = paste("Words not found: ", interest_missing(), 
-                           "\n Data source: PubMed"))
+                           "\n Data source: PubMed, years before 1985 ommitted due to insufficient data"))
 
   })
 }, 
