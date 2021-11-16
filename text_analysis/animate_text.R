@@ -40,7 +40,7 @@ anim <- ggplot(abstract_count, aes(rank, group = word,
   #set scales
   scale_y_continuous(labels = scales::comma) +
   scale_x_reverse() +
-  guides(color = FALSE, fill = FALSE) + #remove legend
+  guides(color = FALSE, fill = FALSE, scale = "none") + #remove legend
   #remove axes, add vertical gridlines
   theme(axis.line=element_blank(),
         axis.text.x=element_blank(),
