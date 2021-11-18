@@ -12,6 +12,7 @@ runtime: shiny
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(kableExtra) # for example code; delete if not needed
+#packages for text analysis shiny app 
 library(tidyverse)
 library(tidytext)
 library(textdata)
