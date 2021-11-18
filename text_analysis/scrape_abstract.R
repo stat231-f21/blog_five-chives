@@ -47,7 +47,7 @@ for (x in 1:37076) {
 #write csv
 write_csv(citations, "data/abstract_list.csv")
 
-#unnest tokens (individual words) and retain year
+#unnest tokens (individual words) and retain year and unique identifier
 abstract_words_all <- abstract_list %>%
   mutate(abstract = str_replace(abstract, "\n", "")) %>% 
   select(pmid, publication_year, abstract) %>%
