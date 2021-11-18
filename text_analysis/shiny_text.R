@@ -152,23 +152,23 @@ server <- function(input, output) {
       left_join(interest_words, by = "word")
     #create dataframe
     df <- abstract_words %>%
-      filter(publication_year == input$year_b) %>% 
+      filter(publication_year == input$year_b) %>% #keeps only year of interest
       right_join(network_words, by = "word") %>% #only keeps interest words
       unique() %>% #remove repeats of connections in same abstract
         select(pmid, word) %>%
         table() %>%
         crossprod() #creates co-occurence matrix
     diag(df) <- 0 #sets connections between same word to 0
-    df <- as.data.frame(df) 
-    
-    num_word <- ncol(df) 
+    df <- as.data.frame(df) #forces table to dataframe
+    num_word <- ncol(df) #number of words = numbers of column
 
     #define vertices and edges
-    ve <- network_words 
+    ve <- network_words #interest words from years, including counts
     ed <- df %>%
-      mutate(from = rownames(.)) %>%
-      tidyr::gather(to, weight, 1:num_word) %>% #gathers co-instances from matrix
-      mutate(weight = ifelse(weight == 0, NA, weight))
+      mutate(from = rownames(.)) %>% #create "from" w/ row names for gather function 
+      #gathers co-occurences from matrix, column names to "to" column, number of co-occurences to "weight"
+      tidyr::gather(to, weight, 1:num_word) %>% 
+      mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
 
     #create igraph
     abst_igraph <- graph_from_data_frame(d = ed,
