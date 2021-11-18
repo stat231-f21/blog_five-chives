@@ -69,23 +69,33 @@ counties_all <- SpatialPolygonsDataFrame(counties_all, counties_df)
 names(counties_all)
 ```
 
-Creating a choropleth map within leaflet and Shiny was fairly difficult, and in order to correctly create the colors for every variable in every county, I had to use colorQuantile for palettes and create `pal_colors` and `pal_labs` in order to accurately make a legend that did not just include the percentages.
+Creating a choropleth map within leaflet and Shiny was fairly difficult, and in order to correctly create the colors for every variable in every county, I had to use colorQuantile for palettes and create `pal_colors` and `pal_labs` in order to accurately make a legend that did not just include the percentages. Different bins had to be made for the coal mining data since it did not have enough unique quantiles.
 
 ```{r color-code, echo = TRUE, eval = FALSE}
 # code to understand color interactivity
 counties_all@data$selected <- counties_all@data[, paste(type_choice_names[type_choice_values == input$typevar])]
     
- palette <- colorQuantile("RdYlGn", domain = counties_all@data$selected, n = 10)
+if(input$typevar != "Proportion of Coal Mines") {
+      palette <- colorQuantile("RdYlGn", domain = counties_all@data$selected, n = 10)
       counties_all@data$color <- palette(counties_all@data$selected)
       
       pal_colors <- unique(palette(sort(counties_all@data$selected)))
       pal_labs <- quantile(counties_all@data$selected, seq(0, 1, .1), na.rm = T)
       pal_labs <- paste(round(lag(pal_labs), digits = 3), round(pal_labs, digits = 3), sep = " - ")[-1] 
+    }
+    
+    if(input$typevar == "Proportion of Coal Mines") {
+      palette <- colorBin("YlOrRd", domain = counties_all@data$selected, 2)
+      counties_all@data$color <- palette(counties_all@data$selected)
+      pal_colors <- unique(palette(sort(counties_all@data$selected)))
+      pal_labs <- c(-Inf, unique(quantile(counties_all@data$selected, na.rm = T)), Inf)
+      pal_labs <- paste(round(lag(pal_labs), digits = 3), round(pal_labs, digits = 3), sep = " - ")[-1] 
+    }
 ```
 
 ```{r map1-visualization, out.extra='style="border: none;"', fig.cap = "Leaflet Map Visualization with Superfund Sites"}
 # embed shiny app once published
- knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "500px")
+ knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "550px")
 ```
 
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.

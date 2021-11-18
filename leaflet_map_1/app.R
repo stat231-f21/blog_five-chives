@@ -43,7 +43,7 @@ names(type_choice_names) <- type_choice_values
 
 # UI
 ui <- 
-                   fluidPage(title = "Environmental Factors & Superfund Sites by U.S. Counties",
+                   fluidPage(titlePanel("Choropleth Map of Environmental/Health Factors with Superfund Sites"),
                        # Input variable they want displayed
                        selectInput(inputId = "typevar",
                                    label = "Choose a variable of interest to plot:",
