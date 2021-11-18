@@ -52,7 +52,7 @@ In order to analyze research pertaining to mortality causes, we scraped abstract
 
 ## Interactive map
 
-The below code shows an example of how I used the `geojsonio` package to join our data on factors such as insecticides, income, etc. in order to utilize this data in `SpatialPolygons` for our `leaflet` map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable "deaths" to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our initial variables I wanted to add into the polygons data.
+The below code shows an example of how I used the `geojsonio` package to join our data on factors such as insecticides, income, etc. in order to utilize this data in `SpatialPolygons` for our `leaflet` choropleth map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable "deaths" to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our initial variables I wanted to add into the polygons data.
 
 ```{r mapdata-code, echo = TRUE, eval = FALSE}
 # show polygon data
@@ -65,75 +65,30 @@ counties_df <- counties_df %>%
 row.names(counties_df) <- sapply(slot(counties_all, "polygons"), 
                                  function(x) slot(x, "ID"))
 counties_all <- SpatialPolygonsDataFrame(counties_all, counties_df)
+
 names(counties_all)
 ```
 
-In order to create the markers for Superfund sites, I had to join this true/false value with a separate dataset for the latitude/longtitude of the county.
+Creating a choropleth map within leaflet and Shiny was fairly difficult, and in order to correctly create the colors for every variable in every county, I had to use colorQuantile for palettes and create `pal_colors` and `pal_labs` in order to accurately make a legend that did not just include the percentages.
 
-```{r markers-data, echo = TRUE, eval = FALSE}
-# code for data wrangling for the superfund markers
-final_data <- read_csv("final_data.csv")
-final_data_markers <- filter(final_data, 
-                             "TRUE" %in% superfund)
-counties_markers <- read_csv("uscounties.csv") %>%
-  mutate(county = paste(county_full, state_id, sep = ", "))
-counties_markers <- final_data_markers %>%
-  left_join(counties_markers, by = "county")
-head(counties_markers)
-```
-
-```{r map1-code, echo = TRUE, eval = FALSE}
-# code to understand the interactive map
-leafletProxy("map") %>%
-      clearShapes() %>%
-      clearControls() %>%
-      addProviderTiles("MapBox", options = providerTileOptions(
-        id = "mapbox.light",
-        accessToken = Sys.getenv('MAPBOX_ACCESS_TOKEN'))) %>% 
-      addPolygons(
-        data = counties_all,
-        fillColor = counties_all@data$color,
-        opacity = 0.7,
-        color = "#444444", 
-        weight = 0.7, 
-        smoothFactor = 0.5,
-        fillOpacity = 0.7,
-        highlightOptions = highlightOptions(
-          weight = 2,
-          color = "white",
-          fillOpacity = 0.9,
-          bringToFront = TRUE),
-        label = labels,
-        labelOptions = labelOptions(
-          style = list("font-weight" = "normal", padding = "3px 8px"),
-          textsize = "15px",
-          direction = "auto")) %>%
-      addLegend(colors = pal_colors, labels = pal_labs, 
-                position = "bottomright", title = input$typevar)
-  })
+```{r color-code, echo = TRUE, eval = FALSE}
+# code to understand color interactivity
+counties_all@data$selected <- counties_all@data[, paste(type_choice_names[type_choice_values == input$typevar])]
     
-
-      observe({
-        if(!input$supervar) {
-         leafletProxy("map") %>%
-            clearMarkers() }
-        else {
-          leafletProxy("map") %>%
-            clearMarkers() %>%
-            addCircleMarkers(data = super_counties,
-                           lng = super_counties$lng,
-                             lat = super_counties$lat, 
-                           radius = 3,
-                             color = "black", 
-                             label = paste("Superfund Site:", super_counties$county))
-          }
-        })
+ palette <- colorQuantile("RdYlGn", domain = counties_all@data$selected, n = 10)
+      counties_all@data$color <- palette(counties_all@data$selected)
+      
+      pal_colors <- unique(palette(sort(counties_all@data$selected)))
+      pal_labs <- quantile(counties_all@data$selected, seq(0, 1, .1), na.rm = T)
+      pal_labs <- paste(round(lag(pal_labs), digits = 3), round(pal_labs, digits = 3), sep = " - ")[-1] 
 ```
 
-```{r map1-visualization, out.extra='style="border: none;"', out.width='56%', fig.cap = "Leaflet Map Visualization"}
+```{r map1-visualization, out.extra='style="border: none;"', fig.cap = "Leaflet Map Visualization with Superfund Sites"}
 # embed shiny app once published
- knitr::include_url("https://caitlinlambert.shinyapps.io/leaflet_map_1/", height = "600px")
+ knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "500px")
 ```
+
+In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
 
 ## Relationships by county
 
