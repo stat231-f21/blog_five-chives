@@ -279,18 +279,21 @@ server <- function(input, output) {
     abst_network <- ggnetwork(abst_igraph)
     ggplot(data = abst_network, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
-      geom_edges(aes(size = weight), 
-                    color = "lightgray", curvature = .1) +
+      geom_edges(aes(size = weight, 
+                     alpha = ifelse(category == "sociodemographic", 
+                                    "Connected", "Not Connected")), 
+                 color = "gray", 
+                 curvature = .1) +
       geom_nodes(aes(size = n, color = category), shape = 20)  +
-      geom_nodetext_repel(aes(label = name, size = n), repel = TRUE, 
+      geom_nodetext_repel(aes(label = name, size = n), 
                     point.padding = unit(0.2, "lines"), color = "gray10") +
       colorspace::scale_color_discrete_qualitative(palette = "Dark 3") +
-      guides(size = guide_legend(order = 2), color = guide_legend(order = 1)) +
+      guides(size = guide_legend(order = 2), color = guide_legend(order = 1), 
+             fill = guide_legend(order = 3)) +
       ggraph::scale_edge_width(c(0.5, 5)) +
-      # geom_nodes() +
-      # geom_nodelabel(aes(label = name, size = n), nudge_x = .01) +
+      scale_alpha_discrete(range = c(1, 0.5)) +
       theme_blank() +
-      labs(size = "Number", color = "Category", 
+      labs(size = "Number", color = "Category", alpha = "Sociodemographic?", 
            caption = paste("Words not found: ", interest_missing(), 
                            "\n Data source: PubMed, years before 1985 ommitted due to insufficient data"))
 
@@ -307,7 +310,7 @@ In the above network, sociodemographic factors tend to be on the edge of the net
 
 ## Limitations and Future Directions
 
-Our findings on the focus of research over time is promising. The rise in the consideration of social factors and their connection to mortality shows increased acknowledgement of the inequality of mortality risks. However, the gap between research and policy is often wide and difficult to bridge. Progressive findings in scientific abstracts, while representative of the inclusion of social thought into clinical work, are not an accurate measure of whether tangible change is being generated from these conclusions. Through lobbying, corporations have a much larger influence in restricting the passage of policies that may reduce their profits than in research (though the influence on scientific research is still present, through funding sources). To assess whether policy makers are putting forth legislation that addresses the root sociodemographic causes of unequal mortality risk, and whether that inequality is even acknowledged in the first place, we would like to  extend our project in the future by analyzing legislation that is proposed/passed in regards to environmental toxicity and mortality. This can allow us to understand whether there is a lag between research and legislation and to explore how the government is addressing these issues. 
+Our findings on the focus of research over time is promising. The rise in the consideration of social factors and their connection to mortality shows increased acknowledgement of the inequality of mortality risks. However, the gap between research and policy is often wide and difficult to bridge. Progressive findings in scientific abstracts, while representative of the inclusion of social thought into clinical work, are not an accurate measure of whether tangible change is being generated from these conclusions. Through lobbying, corporations have a much larger influence in restricting the passage of policies that may reduce their profits than in research (though the influence on scientific research is still present, through funding sources). To assess whether policy makers are putting forth legislation that addresses the root sociodemographic causes of unequal mortality risk, and whether that inequality is even acknowledged in the first place, we would like to  extend our project in the future by analyzing legislation that is proposed/passed in regards to environmental toxicity and mortality. This can allow us to understand whether there is a lag between research and legislation and to explore how the government is addressing health inequalities. 
 
 # References
 
