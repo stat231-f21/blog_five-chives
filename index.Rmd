@@ -100,7 +100,296 @@ if(input$typevar != "Proportion of Coal Mines") {
 
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
 
-## Relationships by county
+## Relationships by State
+
+For our second visualization, we were interested in looking at a different choropleth map that shows indices of our variables of interests not only nationwide, but also statewide. For this visualization, we were interested in giving users the choice to explore these relationships closer at the state level, and a person can even zoom into the choropleth map above and view both visualizations side by side. In order to aid this, users are able to view a scatter plot and a density plot of their variable of interest for all the counties in their state of interest. This can help highlight inequalities within their state and users are further able to view their county of interest on the scatter plots and examine their county relative to others in the state. 
+
+Here is the code that I used to allow users to look closer at points selected on the scatter plot. They can select counties of interest from the selectize input function. I used similar code for the density plot. 
+
+```{r hover code, echo = TRUE, eval = FALSE}
+# Created Function for Hover/ Click Interactivity 
+  output$scatter_info <- renderText({
+    xy_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("x=", round(e$x, 1), " y=", round(e$y, 1), "\n")
+    }
+    xy_range_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("xmin=", round(e$xmin, 1), " xmax=", round(e$xmax, 1), 
+             "ymin=", round(e$ymin, 1), " ymax=", round(e$ymax, 1))
+    }
+    
+    paste0(
+      "click: ", xy_str(input$plot_click),
+      "dblclick: ", xy_str(input$plot_dblclick),
+      "hover: ", xy_str(input$plot_hover),
+      "brush: ", xy_range_str(input$plot_brush)
+    )
+  })
+```
+
+Here is the embedded shiny app. Texas is currently selected, but users have the choice to change the state or even view the map and data for the entire US. 
+
+```{r interactive-map-plots}
+#Load necessary packages
+library(shiny)
+library(shinythemes)
+library(tidyverse)
+library(DT)
+library(urbnmapr)
+library(ggplot2)
+library(RColorBrewer)
+library(ggiraph)
+library(naniar)
+library(sf)
+library(leaflet)
+library(dplyr)
+library(geojsonio)
+library(maptools)
+library(tmap)
+
+# Import data on variables of interest as well as county geography
+county_data <- read_csv("interactive_state_app/county_data.csv")
+scatter_data <- read_csv("interactive_state_app/scatter_data.csv")
+
+# Create choices for states of interest
+statenames <- read_csv("interactive_state_app/states.csv") %>% 
+  janitor::clean_names()
+
+state_choice_values <- c("ALL", unique(statenames$state))
+
+# Create choices for variables of interest
+var_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
+                       "vice_businesses", "education_businesses", "service_agencies", 
+                       "healthcare_businesses", "commute_time", "fungicide", 
+                       "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                       "gini_coefficient")
+var_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
+                      "Vice-Related Businesses", "Education-Related Businesses", 
+                      "Service Agencies", "Healthcare-Related Businesses", 
+                      "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                      "Insecticides Applied", "Percent Unemployed", 
+                      "Percent in Poverty",
+                      "Income Inequality")
+names(var_choice_values) <- var_choice_names
+
+# For button through which users can customize distinguishing variables by color
+color_choice_values <- "superfund"
+color_choice_names <- "National Priority Sites"
+names(color_choice_values) <- color_choice_names
+
+# Selectize counties
+county_choices <- unique(scatter_data$county)
+
+
+shinyApp(
+  ############
+#    ui    #
+############
+ui <- fluidPage(
+  
+  titlePanel("Interactive Map by State"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      # Choose variables of interest
+      selectInput(inputId = "index",
+                  label = "Choose environmental index of choice:",
+                  choices = var_choice_values,
+                  selected = "pct_poverty"),
+      
+      # Choose states of interest to display
+      selectInput(inputId = "state",
+                  label = "Choose a state of interest:",
+                  choices = state_choice_values,
+                  selected = "Texas"),
+      
+      # Choose to color points by presence of a super fund site or not
+      checkboxGroupInput(inputId = "pt_color",
+                         label = "Color scatter plot points by:",
+                         choices = color_choice_values,
+                         selected = "superfund"),
+      
+      # Choose to view counties of interest in selected states
+      selectizeInput(inputId = "county_name",
+                     label = "Identify counties of interest in scatter plot:",
+                     choices = NULL,
+                     selected = NULL,
+                     multiple = TRUE)
+    ),
+    
+    mainPanel(plotOutput(outputId = "mapvar"),
+              splitLayout(cellwidths = c("50%", "50%"), 
+                          plotOutput(outputId = "scatter",
+                                     click = "plot_click",
+                                     dblclick = "plot_dblclick",
+                                     hover = "plot_hover",
+                                     brush = "plot_brush"
+                          ),
+                          plotOutput(outputId = "density",
+                                     click = "density_click",
+                                     dblclick = "density_dblclick",
+                                     hover = "density_hover",
+                                     brush = "density_brush")
+              ),
+              splitLayout(cellWidths = c("50%", "50%"),
+                          verbatimTextOutput("scatter_info"),
+                          verbatimTextOutput("density_info"))
+              
+              
+    )
+  )
+),
+
+
+############
+# server   #
+############
+server <- function(input, output) {
+  
+  # Create data for map reacting to state filter
+  
+  data_for_map <- reactive({
+    data <- {if (input$state != "ALL") 
+      filter(county_data, county_data$state_name == input$state)
+      else county_data}
+  })
+  
+  # Create Interactive Map
+  
+  output$mapvar <- renderPlot({
+    ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
+                                                       y = "lat", 
+                                                       group = "group", 
+                                                       fill = input$index)) +
+      layer(data = data_for_map(), 
+            geom = "polygon", stat = "identity", position = "identity") +
+      geom_polygon(color = NA) +
+      scale_fill_gradientn(colours = heat.colors(10)) +
+      coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+      theme(legend.position="bottom") +
+      labs(x = "longitude",
+           y = "latitude",
+           fill = var_choice_names[var_choice_values == input$index],
+           title = paste(var_choice_names[var_choice_values == input$index], 
+                         "For Counties in the US"),
+           subtitle = paste("Gradient Map for ", input$state)) +
+      theme(panel.grid = element_line(FALSE),
+            panel.background = element_rect("black"))
+  })
+  
+  # Create data for scatter plot reacting to filters
+  # Will use this same reactive data set for density plot
+  
+  data_for_scatter <- reactive({
+    if (input$state != "ALL") 
+      filter(scatter_data, 
+             scatter_data$state_name == input$state, 
+             scatter_data$environ_characteristic == input$index)
+    else filter (scatter_data, environ_characteristic %in% input$index)
+  })
+  
+  observeEvent(data_for_scatter(), {
+    county_state_choices <- unique(data_for_scatter()$county)
+    updateSelectizeInput(inputId = "county_name", 
+                         choices = county_state_choices, 
+                         selected = NULL) 
+  })
+  
+  # Create Interactive Scatter Plots 
+  
+  output$scatter <- renderPlot({
+    ggplot(data = data_for_scatter(), aes_string(x = "median_income", y = "value", 
+                                                 color = "superfund")) +
+      geom_point(position = "jitter") +
+      labs(x = "Median County Income",
+           y = "Index Value",
+           title = paste(var_choice_names[var_choice_values == input$index], 
+                         "By Median Income"),
+           subtitle = paste("For ", input$state),
+           caption = "Colored by National Priority Sites.
+                      Data is collected from counties in the US. 
+                      Refer to EQI website for a dictionary on the variables.",
+           color = color_choice_names[color_choice_values]) +
+      geom_label(data = filter(data_for_scatter(),
+                               county %in% input$county_name),
+                 aes(label = county), 
+                 show.legend = FALSE
+      ) +
+      theme(legend.position = "bottom",
+            plot.title.position = "plot",
+            panel.grid = element_line(FALSE),
+            panel.background = element_rect(fill = "black")) 
+  })
+  
+  # Create Hover/ Click Interactivity for Scatter Plot 
+  
+  output$scatter_info <- renderText({
+    xy_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("x=", round(e$x, 1), " y=", round(e$y, 1), "\n")
+    }
+    xy_range_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("xmin=", round(e$xmin, 1), " xmax=", round(e$xmax, 1), 
+             "ymin=", round(e$ymin, 1), " ymax=", round(e$ymax, 1))
+    }
+    
+    paste0(
+      "click: ", xy_str(input$plot_click),
+      "dblclick: ", xy_str(input$plot_dblclick),
+      "hover: ", xy_str(input$plot_hover),
+      "brush: ", xy_range_str(input$plot_brush)
+    )
+  })
+  
+  
+  # Create Interactive Density Plots
+  
+  output$density <- renderPlot({
+    ggplot(data = data_for_scatter(), aes_string(x = "value")) +
+      geom_density(fill = "red", alpha = 0.8) +
+      #geom_vline(xintercept = mean("value"), color = "black") +
+      labs(x = paste(var_choice_names[var_choice_values == input$index]),
+           y = "Density",
+           title = paste("Density Plot of ", 
+                         var_choice_names[var_choice_values == input$index]),
+           subtitle = paste("For ", input$state),
+           caption = "Data is collected from counties in the US. 
+           Refer to EQI website for a dictionary on the variables.") +
+      theme(plot.title.position = "plot",
+            panel.grid = element_line(FALSE),
+            panel.background = element_rect("black"))
+  })
+  
+  # Create Hover/ Click Interactivity for Density Plot
+  
+  output$density_info <- renderText({
+    xy_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("x=", round(e$x, 1), " y=", round(e$y, 1), "\n")
+    }
+    xy_range_str <- function(e) {
+      if(is.null(e)) return("NULL\n")
+      paste0("xmin=", round(e$xmin, 1), " xmax=", round(e$xmax, 1), 
+             "ymin=", round(e$ymin, 1), " ymax=", round(e$ymax, 1))
+    }
+    
+    paste0(
+      "click: ", xy_str(input$density_click),
+      "dblclick: ", xy_str(input$density_dblclick),
+      "hover: ", xy_str(input$density_hover),
+      "brush: ", xy_range_str(input$density_brush)
+    )
+  })
+},
+options = list(height = 1000)
+)
+```
+
+It’s visible that there is inequality and different environmental considerations throughout the United States. In looking at a map of the entire country or zooming in to a specific state, it’s visible that the value of the variables vary and there are areas that report higher or lower values for specific indices. For example, there are disproportionately more coal mines in mountainous areas and higher insecticide use in rural areas. Additionally, there is a visible rural-urban divide with regard to income level and income equality. 
+
+Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their curiosity or knowledge. 
 
 ## Research abstract analysis
 
