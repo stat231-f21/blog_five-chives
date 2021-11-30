@@ -1,7 +1,7 @@
 ---
 title: "Environmental and Sociodemographic Determinants of Mortality in the US"
-author: "Your Names Here"
-date: "Add a date"
+author: "Five Chives: Dasha Asienga, Caitlin Lambert, Elizabeth Zhang"
+date: "Last edited 11/30/21"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -31,6 +31,8 @@ knitr::opts_chunk$set(echo = FALSE,
 options(knitr.kable.NA = '')
 ```
 
+![Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments.  (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in "Cancer Alley", Louisiana, 2014](img/header.jpg)
+
 # Introduction
 
 In Louisiana, a row of toxic waste producing plants has gained national attention. In this area, large corporations continue to release larger and larger amounts of cancer-causing chemicals into the environment, and the effects on community health have been detrimental enough for this area to receive the name "Cancer Alley". The impacts of this unregulated pollution are not equally distributed: the groups at risk are predominantly black and low-income communities. Around the country, industries release fatal amounts of toxic chemicals into our environment, and underprivileged communities are most commonly the victims of these actions. The unequal distribution of wealth and power in our country, created by social systems that protect certain groups and leave others behind, has deep, historically established effects that extend even to the biological level. This is realized in the entangled relationship between sociodemographic inequality in the United States and toxicity in the environment. An individual's place within these imbricated factors is out of their control, and, yet, they can become major determinant's of an individual's health and wellbeing. 
@@ -39,6 +41,7 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 ## Questions
 
+* Are sociodemographic determinants of mortality being acknowledged in the scientific research community?
 
 # Data
 
@@ -391,7 +394,15 @@ It’s visible that there is inequality and different environmental consideratio
 
 Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their curiosity or knowledge. 
 
-## Research abstract analysis
+## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
+
+### Animated bar chart
+
+![](data/gganim2.gif)
+
+In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.
+
+### Code
 
 The below code demonstrates how we used the `gganimate`, which builds off of the `ggplot2` package, and `gifski` packages to create an animated bar chart of top words used in abstracts over time. We used the `gganimate` package to create an animated object from `barchart`, which was a static barchart of top words that we created using `ggplot2`. We used the `gifski` package to render a gif from out animation. 
 
@@ -413,36 +424,9 @@ animate(anim, #object to create gif
         end_pause = 15, start_pause =  15 #length of pauses between repeats) 
 ```
 
+## Word networks in research abstracts {.tabset .tabset-fade .tabset-pills}
 
-![](data/gganim2.gif)
-
-In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts. 
-
-To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
-
-```{r network-code, echo = TRUE, eval = FALSE}
-#create dataframe with co-occurence matrix
-df <- abstract_words %>%
-  #keeps only year of interest based off of input from user in Shiny
-  filter(publication_year == input$year_b) %>% 
-  right_join(network_words, by = "word") %>% #only keeps interest words
-  unique() %>% #remove repeats of connections in same abstract
-  select(pmid, word) %>%
-  table() %>% 
-  crossprod() #creates co-occurence matrix of connections 
-diag(df) <- 0 #sets connections between same word to 0
-df <- as.data.frame(df)
-
-#define edges from co-occurence matrix
-ed <- df %>%
-  mutate(from = rownames(.)) %>% #create "from" column from row names 
-  #gathers co-occurences from matrix,
-    #create "to" column from column names, 
-    #create "weight" column from number of co-occurences
-  tidyr::gather(to, weight, 1:ncol(df)) %>% 
-  mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
-```
-
+### Interactive network
 
 ```{r network-display2, out.extra='style="border: none;"', out.width='56%'}
 #read in list of abstracts
@@ -595,7 +579,36 @@ options = list(height = 600)
 
 In the above network, sociodemographic factors tend to be on the edge of the network in earlier years, and the networks tend to be more disconnected. As the years progress, though, at around 2010-2013, the network tend to become much more connected. From 2013-2021, sociodemographic factors also tend to become more and more central to the network. 
 
+### Code
+
+To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
+
+```{r network-code, echo = TRUE, eval = FALSE}
+#create dataframe with co-occurence matrix
+df <- abstract_words %>%
+  #keeps only year of interest based off of input from user in Shiny
+  filter(publication_year == input$year_b) %>% 
+  right_join(network_words, by = "word") %>% #only keeps interest words
+  unique() %>% #remove repeats of connections in same abstract
+  select(pmid, word) %>%
+  table() %>% 
+  crossprod() #creates co-occurence matrix of connections 
+diag(df) <- 0 #sets connections between same word to 0
+df <- as.data.frame(df)
+
+#define edges from co-occurence matrix
+ed <- df %>%
+  mutate(from = rownames(.)) %>% #create "from" column from row names 
+  #gathers co-occurences from matrix,
+    #create "to" column from column names, 
+    #create "weight" column from number of co-occurences
+  tidyr::gather(to, weight, 1:ncol(df)) %>% 
+  mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
+```
+
 # Conclusion
+
+The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in connectedness of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
 
 ## Limitations and Future Directions
 
