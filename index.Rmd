@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = FALSE,
 options(knitr.kable.NA = '')
 ```
 
-![Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments.  (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in 2014](img/header.jpg)
+![Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments.  (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in "Cancer Alley", Louisiana, 2014](img/header.jpg)
 
 # Introduction
 
