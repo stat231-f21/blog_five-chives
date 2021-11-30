@@ -133,6 +133,8 @@ Here is the code that I used to allow users to look closer at points selected on
 
 Here is the embedded shiny app. Texas is currently selected, but users have the choice to change the state or even view the map and data for the entire US. 
 
+### Interactive Map and Associated Plots
+
 ```{r interactive-map-plots}
 #Load necessary packages
 library(shiny)
@@ -393,6 +395,101 @@ options = list(height = 1000)
 It’s visible that there is inequality and different environmental considerations throughout the United States. In looking at a map of the entire country or zooming in to a specific state, it’s visible that the value of the variables vary and there are areas that report higher or lower values for specific indices. For example, there are disproportionately more coal mines in mountainous areas and higher insecticide use in rural areas. Additionally, there is a visible rural-urban divide with regard to income level and income equality. 
 
 Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their curiosity or knowledge. 
+
+## Inter-Variable Relationships
+
+### Interactive Line Graphs
+
+```{r interactive-line-graph}
+# Load packages 
+library(shiny)
+library(shinythemes)
+library(tidyverse)
+library(DT)
+library(ggplot2)
+library(RColorBrewer)
+library(ggiraph)
+library(naniar)
+library(dplyr)
+
+# Import data on variables of interest
+county_data <- read_csv("interactive_state_app/county_data.csv")
+
+# Create choices for variables of interest
+linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
+                       "vice_businesses", "education_businesses", "service_agencies", 
+                       "healthcare_businesses", "commute_time", "fungicide", 
+                       "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                       "gini_coefficient")
+linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
+                      "Vice-Related Businesses", "Education-Related Businesses", 
+                      "Service Agencies", "Healthcare-Related Businesses", 
+                      "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                      "Insecticides Applied", "Percent Unemployed", 
+                      "Percent in Poverty",
+                      "Income Inequality")
+names(linevar_choice_values) <- linevar_choice_names
+
+shinyApp(
+  ############
+#    ui    #
+############
+ui <- fluidPage(
+  
+  titlePanel("Line Graphs of Variables of Interest"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      # Choose variable 1 of interest
+      selectInput(inputId = "index1",
+                  label = "Choose index 1 of choice (x-axis):",
+                  choices = linevar_choice_values,
+                  selected = "fungicide"),
+      
+      # Choose variable 2 of interest
+      selectInput(inputId = "index2",
+                  label = "Choose index 2 of choice (y-axis):",
+                  choices = linevar_choice_values,
+                  selected = "total_deaths")
+    
+    ),
+    
+    mainPanel(verbatimTextOutput(outputId = "linegraph"))
+              
+    )
+  ),
+
+############
+# server   #
+############
+server <- function(input, output) {
+ 
+  output$linegraph <- renderPlot({
+    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
+      geom_smooth(methods = "loess") +
+      labs(x = linevar_choice_names[linevar_choice_values == input$index1],
+           y = linevar_choice_names[linevar_choice_values == input$index2],
+           title = paste("Interactive Line Graph of", 
+                         linevar_choice_names[linevar_choice_values == input$index2], 
+                         "by ",
+                         linevar_choice_names[linevar_choice_values == input$index1]),
+           subtitle = "Choose both variables of interest",
+           caption = "Data is collected from counties in the US.
+           Refer to EQI website for a dictionary on the variables.",
+           color = "National Priority Sites") +
+      theme(legend.position = "bottom",
+            plot.title.position = "plot",
+            panel.grid = element_line(FALSE),
+            panel.background = element_rect(fill = "black"))
+  })
+  
+  
+},
+options = list(height = 700)
+)
+
+```
+
 
 ## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
 
