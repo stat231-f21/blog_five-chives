@@ -44,7 +44,7 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). [[ADD MORE HERE]]
 
-In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see [[INSERT LINK]] for the full list of retained words).
+In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words).
 
 # Results
 
