@@ -1,7 +1,7 @@
 ---
 title: "Environmental and Sociodemographic Determinants of Mortality in the US"
-author: "Your Names Here"
-date: "Add a date"
+author: "Five Chives: Dasha Asienga, Caitlin Lambert, Elizabeth Zhang"
+date: "Last edited 11/30/21"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -30,6 +30,8 @@ knitr::opts_chunk$set(echo = FALSE,
 # Set R environment options
 options(knitr.kable.NA = '')
 ```
+
+![Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments.  (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in 2014](img/header.jpg)
 
 # Introduction
 
