@@ -393,7 +393,15 @@ It’s visible that there is inequality and different environmental consideratio
 
 Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their curiosity or knowledge. 
 
-## Research abstract analysis
+## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
+
+### Animated bar chart
+
+![](data/gganim2.gif)
+
+In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.
+
+### Code
 
 The below code demonstrates how we used the `gganimate`, which builds off of the `ggplot2` package, and `gifski` packages to create an animated bar chart of top words used in abstracts over time. We used the `gganimate` package to create an animated object from `barchart`, which was a static barchart of top words that we created using `ggplot2`. We used the `gifski` package to render a gif from out animation. 
 
@@ -415,36 +423,9 @@ animate(anim, #object to create gif
         end_pause = 15, start_pause =  15 #length of pauses between repeats) 
 ```
 
+## Word networks in research abstracts {.tabset .tabset-fade .tabset-pills}
 
-![](data/gganim2.gif)
-
-In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts. 
-
-To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
-
-```{r network-code, echo = TRUE, eval = FALSE}
-#create dataframe with co-occurence matrix
-df <- abstract_words %>%
-  #keeps only year of interest based off of input from user in Shiny
-  filter(publication_year == input$year_b) %>% 
-  right_join(network_words, by = "word") %>% #only keeps interest words
-  unique() %>% #remove repeats of connections in same abstract
-  select(pmid, word) %>%
-  table() %>% 
-  crossprod() #creates co-occurence matrix of connections 
-diag(df) <- 0 #sets connections between same word to 0
-df <- as.data.frame(df)
-
-#define edges from co-occurence matrix
-ed <- df %>%
-  mutate(from = rownames(.)) %>% #create "from" column from row names 
-  #gathers co-occurences from matrix,
-    #create "to" column from column names, 
-    #create "weight" column from number of co-occurences
-  tidyr::gather(to, weight, 1:ncol(df)) %>% 
-  mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
-```
-
+### Interactive network
 
 ```{r network-display2, out.extra='style="border: none;"', out.width='56%'}
 #read in list of abstracts
@@ -597,8 +578,35 @@ options = list(height = 600)
 
 In the above network, sociodemographic factors tend to be on the edge of the network in earlier years, and the networks tend to be more disconnected. As the years progress, though, at around 2010-2013, the network tend to become much more connected. From 2013-2021, sociodemographic factors also tend to become more and more central to the network. 
 
-# Conclusion
+### Code
 
+To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
+
+```{r network-code, echo = TRUE, eval = FALSE}
+#create dataframe with co-occurence matrix
+df <- abstract_words %>%
+  #keeps only year of interest based off of input from user in Shiny
+  filter(publication_year == input$year_b) %>% 
+  right_join(network_words, by = "word") %>% #only keeps interest words
+  unique() %>% #remove repeats of connections in same abstract
+  select(pmid, word) %>%
+  table() %>% 
+  crossprod() #creates co-occurence matrix of connections 
+diag(df) <- 0 #sets connections between same word to 0
+df <- as.data.frame(df)
+
+#define edges from co-occurence matrix
+ed <- df %>%
+  mutate(from = rownames(.)) %>% #create "from" column from row names 
+  #gathers co-occurences from matrix,
+    #create "to" column from column names, 
+    #create "weight" column from number of co-occurences
+  tidyr::gather(to, weight, 1:ncol(df)) %>% 
+  mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
+```
+
+# Conclusion
+ 
 ## Limitations and Future Directions
 
 Our findings on the focus of research over time is promising. The rise in the consideration of social factors and their connection to mortality shows increased acknowledgement of the inequality of mortality risks. However, the gap between research and policy is often wide and difficult to bridge. Progressive findings in scientific abstracts, while representative of the inclusion of social thought into clinical work, are not an accurate measure of whether tangible change is being generated from these conclusions. Through lobbying, corporations have a much larger influence in restricting the passage of policies that may reduce their profits than in research (though the influence on scientific research is still present, through funding sources). To assess whether policy makers are putting forth legislation that addresses the root sociodemographic causes of unequal mortality risk, and whether that inequality is even acknowledged in the first place, we would like to  extend our project in the future by analyzing legislation that is proposed/passed in regards to environmental toxicity and mortality. This can allow us to understand whether there is a lag between research and legislation and to explore how the government is addressing health inequalities. 
