@@ -13,6 +13,7 @@ library(plotly)
 library(rmarkdown)
 library(knitr)
 library(pander)
+library(mathjaxr)
 
 # Import data on variables of interest
 county_data <- read_csv("interactive_state_app/county_data.csv") 
@@ -55,9 +56,19 @@ ui <- fluidPage(
       
     ),
     
-    mainPanel(verbatimTextOutput("summary"),
-              uiOutput(outputId = "results"),
-              plotlyOutput(outputId = "regression"))
+    mainPanel(
+      tags$b("Compute parameters in R:"),
+      verbatimTextOutput("summary"),
+      br(),
+      br(),
+      tags$b("Regression plot:"),
+      uiOutput(outputId = "results"),
+      plotlyOutput(outputId = "regression"),
+      br(),
+      br(),
+      tags$b("Interpretation:"),
+      uiOutput(outputId = "interpretation")
+      )
     
   )
 )
@@ -72,10 +83,95 @@ server <- function(input, output) {
   lm1 <- reactive({
     lm(reformulate(input$predictor, input$response), data = county_data)
     })
-
+  
+  # Create summary output of a simple linear regression
   output$summary <- renderPrint({summary(lm1())})
   
+  # Pull out and print results from SLR output
+  output$results <- renderUI({
+    withMathJax(
+      paste0(
+        "Adj. \\( R^2 = \\) ", round(summary(lm1())$adj.r.squared, 3),
+        ", \\( \\beta_0 = \\) ", round(lm1()$coef[[1]], 3),
+        ", \\( \\beta_1 = \\) ", round(lm1()$coef[[2]], 3),
+        ", P-value ", "\\( = \\) ", signif(summary(lm1())$coef[2, 4], 3)
+      )
+    )
+  })
   
+  
+  output$interpretation <- renderUI({
+    if (summary(lm1())$coefficients[1, 4] < 0.05 & 
+        summary(lm1())$coefficients[2, 4] < 0.05) {
+      withMathJax(
+        paste0("Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("For a (hypothetical) value of ", input$predictor, 
+               " = 0, the mean of ", input$response, " = ", 
+               round(lm1()$coef[[1]], 3), "."),
+        br(),
+        br(),
+        paste0("For an increase of one unit of ", input$predictor, ", ", 
+               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
+                                      " increases (on average) by ", 
+                                      " decreases (on average) by "), 
+               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2, 
+                                                      " units", " unit"), ".")
+      )
+    } else if (summary(lm1())$coefficients[1, 4] < 0.05 & 
+               summary(lm1())$coefficients[2, 4] >= 0.05) {
+      withMathJax(
+        paste0("Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("For a (hypothetical) value of ", input$predictor, " = 0, 
+               the mean of ", input$response, " = ", round(lm1()$coef[[1]], 3), "."),
+        br(),
+        br(),
+        paste0("\\( \\beta_1 \\)", " is not significantly different from 0 (p-value = ", 
+               round(summary(lm1())$coefficients[2, 4], 3), ") so there is no significant 
+               relationship between ", input$predictor, " and ", input$response, ".")
+      )
+    } else if (summary(fit)$coefficients[1, 4] >= 0.05 & summary(fit)$coefficients[2, 4] < 0.05) {
+      withMathJax(
+        paste0("Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("\\( \\beta_0 \\)", " is not significantly different from 0 (p-value = ", 
+               round(summary(lm1())$coefficients[1, 4], 3), ") so when ", input$predictor, 
+               " = 0, the mean of ", input$response, " is not significantly different from 0."),
+        br(),
+        br(),
+        paste0("For an increase of one unit of ", input$predictor, ", ", 
+               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
+                                      " increases (on average) by ", 
+                                      " decreases (on average) by "), 
+               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2,
+                                                      " units", " unit"), ".")
+      )
+    } else {
+      withMathJax(
+        paste0("Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("\\( \\beta_0 \\)", " and ", "\\( \\beta_1 \\)", " are not 
+               significantly different from 0 (p-values = ", 
+               round(summary(lm1())$coefficients[1, 4], 3), " and ", 
+               round(summary(lm1())$coefficients[2, 4], 3), 
+               ", respectively) so the mean of ", input$response, 
+               " is not significantly different from 0.")
+      )
+    }
+  })
   
 }
 
