@@ -551,9 +551,6 @@ library(naniar)
 library(dplyr)
 library(plotly)
 
-# Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data.csv")
-
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
                            "vice_businesses", "education_businesses", "service_agencies", 
@@ -665,9 +662,6 @@ library(rmarkdown)
 library(knitr)
 library(pander)
 library(mathjaxr)
-
-# Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data.csv") 
 
 # Create choices for variables of interest
 slrvar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
@@ -839,6 +833,7 @@ server <- function(input, output) {
 options = list(height = 1200)
 )
 ```
+
 
 ## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
 
