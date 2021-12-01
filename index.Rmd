@@ -222,8 +222,8 @@ var_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter",
 names(var_choice_values) <- var_choice_names
 
 # For button through which users can customize distinguishing variables by color
-color_choice_values <- "superfund"
-color_choice_names <- "National Priority Sites"
+color_choice_values <- c("superfund")
+color_choice_names <- c("National Priority Sites")
 names(color_choice_values) <- color_choice_names
 
 # Selectize counties
@@ -253,10 +253,10 @@ ui <- fluidPage(
                   selected = "Texas"),
       
       # Choose to color points by presence of a super fund site or not
-      checkboxGroupInput(inputId = "pt_color",
-                         label = "Color scatter plot points by:",
-                         choices = color_choice_values,
-                         selected = "superfund"),
+      radioButtons(inputId = "pt_color",
+                   label = "Line graphs are colored by:",
+                   choices = color_choice_values,
+                   selected = NULL),
       
       # Choose to view counties of interest in selected states
       selectizeInput(inputId = "county_name",
@@ -553,7 +553,7 @@ library(dplyr)
 library(plotly)
 
 # Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data_simple.csv")
+county_data <- read_csv("interactive_state_app/county_data.csv")
 
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
@@ -599,7 +599,7 @@ ui <- fluidPage(
                   selected = "total_deaths"),
       
       radioButtons(inputId = "pt_color",
-                   label = "Line graphs are colored by:",
+                   label = "Color line graphs by:",
                    choices = linecolor_choice_values,
                    selected = NULL)
       
