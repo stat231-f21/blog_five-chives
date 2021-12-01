@@ -98,10 +98,52 @@ if(input$typevar != "Proportion of Coal Mines") {
 
 ```{r map1-visualization, out.extra='style="border: none;"', fig.cap = "Leaflet Map Visualization with Superfund Sites"}
 # embed shiny app once published
- knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "550px")
+ knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "650px")
 ```
 
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
+
+```{r hist-super, out.extra='style="border: none;"'}
+total_df <- read_csv("final_data.csv")
+
+type_choice_names <- c("ln_hh_inc_x", "Total / (population / 100000)", "eqi_2jan2018_vc", "insecticide_ln_x", "gini_est_x", "std_coal_prim_pop_ln_y","hc_env_rate_ln_x")
+type_choice_values <- c("Median Income", "Mortality Rate", "EQI", "Insecticide Applied","Income Inequality", "Proportion of Coal Mines", "Healthcare-related Businesses")
+#notes_choice_values <- c("From CDC data, log-transformed", "From CDC data, per 100,000 persons",
+#                         "From EPA data, EQI (Environmental Quality Index), 2018 measurement")
+names(type_choice_names) <- type_choice_values
+
+shinyApp(
+  ######
+  #ui
+  ######
+  
+  ui <- fluidPage(
+    
+    titlePanel("Examining the Effects of Superfund Sites"),
+    
+    sidebarLayout(
+      sidebarPanel(
+        selectInput(inputId = "typevar",
+                    label = "Choose a variable of interest to plot:",
+                    choices = type_choice_values,
+                    selected = "EQI")),
+      mainPanel(plotOutput(outputId = "plot")))),
+  
+  server <- function(input, output, session) {
+    
+    output$plot <- renderPlot({
+      ggplot(data=total_df, aes_string(x = type_choice_names[type_choice_values == input$typevar])) + 
+          geom_histogram(bins = 20, aes(y = stat(width*density)),
+                         color = "darkblue", fill = "lightblue") +
+          facet_wrap(~superfund) +
+        labs(x = input$typevar,
+             y = "Percentage")
+    })
+  }
+)
+```
+
+These histograms were created to examine the difference between county environmental and health data for counties that are classified as having Superfund Sites by the EPA and those that are not. For this, I made sure to put the values in percentages rather than count since there are more non-Superfund-Site counties than not, which would skew the results. Some things we can see in these graphs are that the mortality rate for Superfund-Sites are more tightly clustered around their maximum, while non-Superfund-Sites have closer to a normal distribution. However, Superfund Sites appear to have a higher median income and amount of healthcare-related businesses, which may be because Superfund Sites tend to be clustered in highly populated and industrialized areas like cities.
 
 ## Relationships by State
 
