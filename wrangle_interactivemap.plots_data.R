@@ -40,17 +40,30 @@ county_names <- urbnmapr::counties %>%
   unite("county_state", c(county_name, state_abbv), sep = ", ") %>%
   mutate(county_join = tolower(county_state))
 
+
+# Create data for shiny app. Use it for map and mutate it for plots.
 county_data <- left_join(var_data, county_names, by = "county_join")
 
-write_csv(county_data, "county_data.csv")
+county_data <- county_data %>%
+  select(-c("blood", "endocrine", "mental", "nervous",
+            "circulatory", "respiratory", "digestive", "musculoskeletal", 
+            "infectious", "neoplasms", "genitourinary", "perinatal", 
+            "abnormal", "external", "skin", "congenital", "pregnancy"))
 
-# #Create map data
-# county_map <- maps::map("county", regions = ".", plot = FALSE, fill = TRUE) %>% 
-#   st_as_sf() %>%
-#   rename("county" = ID)
-# 
-# head(county_map)
-# 
-# state_map <- maps::map("state", regions = ".", plot = FALSE, fill = TRUE) %>% 
-#   st_as_sf() 
+write_csv(county_data, "interactive_state_app/county_data.csv")
+
+# Create data for scatter plots and density plots
+scatter_data <- county_data %>%
+  pivot_longer(-c("county", "stfips", "state", "county_name", "county_join", 
+                  "county_code", "median_income", "superfund", 
+                  "eqi_level", "income_level", "eqi", "income", "county_state.x", 
+                  "state_name", "piece", "group", "county_fips", "county_state.y",
+                  "state_fips", "fips_class"),
+               names_to = "environ_characteristic",
+               values_to = "value") %>%
+  select(-c("stfips", "county_code", "county_state.x", "eqi_level", "income_level",
+            "eqi", "income", "piece", "county_fips", "state_fips", "fips_class"))
+
+write_csv(scatter_data, "interactive_state_app/scatter_data.csv")
+
 
