@@ -99,7 +99,18 @@ server <- function(input, output) {
     )
   })
   
+  # Generate regression plot
+  output$regression <- renderPlotly({
+    r <- ggplot(county_data, aes_string(x = input$predictor, y = input$response)) +
+      stat_smooth(method = "lm", se = TRUE) +
+      ylab(slrvar_choice_names[slrvar_choice_values == input$response]) +
+      xlab(slrvar_choice_names[slrvar_choice_values == input$predictor]) +
+      theme_minimal()
+    
+    ggplotly(r)
+  }) 
   
+  # Draw conclusions and print out interpretation
   output$interpretation <- renderUI({
     if (summary(lm1())$coefficients[1, 4] < 0.05 & 
         summary(lm1())$coefficients[2, 4] < 0.05) {
