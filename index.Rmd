@@ -52,7 +52,7 @@ In order to analyze research pertaining to mortality causes, we scraped abstract
 
 ## Interactive map
 
-The below code shows an example of how I used the `geojsonio` package to join our data on factors such as insecticides, income, etc. in order to utilize this data in `SpatialPolygons` for our `leaflet` choropleth map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable "deaths" to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our initial variables I wanted to add into the polygons data.
+The below code shows an example of how I used the `geojsonio` package to join our data on factors such as insecticides, income, etc. in order to utilize this data in `SpatialPolygons` for our `leaflet` choropleth map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable "deaths" to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our variables I wanted to add into the polygons data.
 
 ```{r mapdata-code, echo = TRUE, eval = FALSE}
 # show polygon data
