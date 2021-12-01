@@ -1,4 +1,4 @@
-# Load packages 
+#Load packages 
 library(shiny)
 library(shinythemes)
 library(tidyverse)
@@ -8,23 +8,24 @@ library(RColorBrewer)
 library(ggiraph)
 library(naniar)
 library(dplyr)
+library(plotly)
 
 # Import data on variables of interest
 county_data <- read_csv("interactive_state_app/county_data.csv")
 
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-                       "vice_businesses", "education_businesses", "service_agencies", 
-                       "healthcare_businesses", "commute_time", "fungicide", 
-                       "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                       "gini_coefficient")
+                           "vice_businesses", "education_businesses", "service_agencies", 
+                           "healthcare_businesses", "commute_time", "fungicide", 
+                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
 linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-                      "Vice-Related Businesses", "Education-Related Businesses", 
-                      "Service Agencies", "Healthcare-Related Businesses", 
-                      "Commute Time", "Fungicides Applied", "Herbicides Applied",
-                      "Insecticides Applied", "Percent Unemployed", 
-                      "Percent in Poverty",
-                      "Income Inequality")
+                          "Vice-Related Businesses", "Education-Related Businesses", 
+                          "Service Agencies", "Healthcare-Related Businesses", 
+                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                          "Insecticides Applied", "Percent Unemployed", 
+                          "Percent in Poverty",
+                          "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
 
 ############
@@ -47,37 +48,36 @@ ui <- fluidPage(
                   label = "Choose index 2 of choice (y-axis):",
                   choices = linevar_choice_values,
                   selected = "total_deaths")
-    
+      
     ),
     
-    mainPanel(plotOutput(outputId = "linegraph"))
-              
-    )
+    mainPanel(plotlyOutput(outputId = "linegraph"))
+    
   )
+)
 
 
 ############
 # server   #
 ############
 server <- function(input, output) {
- 
-  output$linegraph <- renderPlot({
-    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
+  
+  output$linegraph <- renderPlotly({
+    
+    p <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
       geom_smooth(methods = "loess") +
       labs(x = linevar_choice_names[linevar_choice_values == input$index1],
            y = linevar_choice_names[linevar_choice_values == input$index2],
-           title = paste("Interactive Line Graph of", 
-                         linevar_choice_names[linevar_choice_values == input$index2], 
-                         "by ",
+           title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+                         "by",
                          linevar_choice_names[linevar_choice_values == input$index1]),
-           subtitle = "Choose both variables of interest",
            caption = "Data is collected from counties in the US.
-           Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
+              Refer to EQI website for a dictionary on the variables.") +
       theme(legend.position = "bottom",
             plot.title.position = "plot",
-            panel.grid = element_line(FALSE),
             panel.background = element_rect(fill = "black"))
+    
+    ggplotly(p)
   })
   
   
