@@ -20,6 +20,7 @@ library(ggnetwork)
 library(igraph)
 library(shiny)
 library(dplyr)
+library(plotly)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
@@ -265,7 +266,7 @@ ui <- fluidPage(
                      multiple = TRUE)
     ),
     
-    mainPanel(plotOutput(outputId = "mapvar"),
+    mainPanel(plotlyOutput(outputId = "mapvar"),
               splitLayout(cellwidths = c("50%", "50%"), 
                           plotOutput(outputId = "scatter",
                                      click = "plot_click",
@@ -304,8 +305,8 @@ server <- function(input, output) {
   
   # Create Interactive Map
   
-  output$mapvar <- renderPlot({
-    ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
+  output$mapvar <- renderPlotly({
+  m <-  ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
                                                        y = "lat", 
                                                        group = "group", 
                                                        fill = input$index)) +
@@ -319,10 +320,12 @@ server <- function(input, output) {
            y = "latitude",
            fill = var_choice_names[var_choice_values == input$index],
            title = paste(var_choice_names[var_choice_values == input$index], 
-                         "For Counties in the US"),
-           subtitle = paste("Gradient Map for ", input$state)) +
-      theme(panel.grid = element_line(FALSE),
-            panel.background = element_rect("black"))
+                         "For ",
+                         input$state)) +
+      theme(panel.background = element_rect("black"))
+  
+  ggplotly(m)
+  
   })
   
   # Create data for scatter plot reacting to filters
@@ -443,7 +446,7 @@ Ultimately, it’s hard to quantify all the results that we can obtain from this
 ### Interactive Line Graphs
 
 ```{r interactive-line-graph}
-# Load packages 
+#Load packages 
 library(shiny)
 library(shinythemes)
 library(tidyverse)
@@ -453,24 +456,26 @@ library(RColorBrewer)
 library(ggiraph)
 library(naniar)
 library(dplyr)
+library(plotly)
 
 # Import data on variables of interest
 county_data <- read_csv("interactive_state_app/county_data.csv")
 
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-                       "vice_businesses", "education_businesses", "service_agencies", 
-                       "healthcare_businesses", "commute_time", "fungicide", 
-                       "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                       "gini_coefficient")
+                           "vice_businesses", "education_businesses", "service_agencies", 
+                           "healthcare_businesses", "commute_time", "fungicide", 
+                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
 linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-                      "Vice-Related Businesses", "Education-Related Businesses", 
-                      "Service Agencies", "Healthcare-Related Businesses", 
-                      "Commute Time", "Fungicides Applied", "Herbicides Applied",
-                      "Insecticides Applied", "Percent Unemployed", 
-                      "Percent in Poverty",
-                      "Income Inequality")
+                          "Vice-Related Businesses", "Education-Related Businesses", 
+                          "Service Agencies", "Healthcare-Related Businesses", 
+                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                          "Insecticides Applied", "Percent Unemployed", 
+                          "Percent in Poverty",
+                          "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
+
 
 shinyApp(
   ############
@@ -493,42 +498,42 @@ ui <- fluidPage(
                   label = "Choose index 2 of choice (y-axis):",
                   choices = linevar_choice_values,
                   selected = "total_deaths")
-    
+      
     ),
     
-    mainPanel(plotOutput(outputId = "linegraph"))
-              
-    )
-  ),
+    mainPanel(plotlyOutput(outputId = "linegraph"))
+    
+  )
+),
 
 ############
 # server   #
 ############
 server <- function(input, output) {
- 
-  # Create line graph
-  output$linegraph <- renderPlot({
-    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
+  
+  output$linegraph <- renderPlotly({
+    
+    p <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
       geom_smooth(methods = "loess") +
       labs(x = linevar_choice_names[linevar_choice_values == input$index1],
            y = linevar_choice_names[linevar_choice_values == input$index2],
-           title = paste("Interactive Line Graph of", 
-                         linevar_choice_names[linevar_choice_values == input$index2], 
-                         "by ",
+           title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+                         "by",
                          linevar_choice_names[linevar_choice_values == input$index1]),
-           subtitle = "Choose both variables of interest",
            caption = "Data is collected from counties in the US.
-           Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
+              Refer to EQI website for a dictionary on the variables.") +
       theme(legend.position = "bottom",
             plot.title.position = "plot",
-            panel.grid = element_line(FALSE),
             panel.background = element_rect(fill = "black"))
+    
+    ggplotly(p)
   })
   
   
 },
+
 options = list(height = 500)
+
 )
 
 ```
@@ -545,6 +550,7 @@ library(RColorBrewer)
 library(ggiraph)
 library(naniar)
 library(dplyr)
+library(plotly)
 
 # Import data on variables of interest
 county_data <- read_csv("interactive_state_app/county_data.csv")
@@ -554,20 +560,21 @@ linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matte
                            "vice_businesses", "education_businesses", "service_agencies", 
                            "healthcare_businesses", "commute_time", "fungicide", 
                            "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                           "gini_coefficient")
+                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
 linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
                           "Vice-Related Businesses", "Education-Related Businesses", 
                           "Service Agencies", "Healthcare-Related Businesses", 
                           "Commute Time", "Fungicides Applied", "Herbicides Applied",
                           "Insecticides Applied", "Percent Unemployed", 
                           "Percent in Poverty",
-                          "Income Inequality")
+                          "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
 
 # For label to distinguish variables by color
 linecolor_choice_values <- "superfund"
 linecolor_choice_names <- "National Priority Sites"
 names(linecolor_choice_values) <- linecolor_choice_names
+
 
 shinyApp(
   ############
@@ -592,16 +599,17 @@ ui <- fluidPage(
                   selected = "total_deaths"),
       
       radioButtons(inputId = "pt_color",
-                   label = "Color line graph by:",
+                   label = "Line graphs are colored by:",
                    choices = linecolor_choice_values,
                    selected = NULL)
       
     ),
     
-    mainPanel(plotOutput(outputId = "linegraphcolor"))
+    mainPanel(plotlyOutput(outputId = "linegraphcolor"))
     
   )
 ),
+
 ############
 # server   #
 ############
@@ -609,28 +617,30 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  # Create line graph
-  output$linegraphcolor <- renderPlot({
-    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
-                                          color = "superfund")) +
-      geom_smooth(methods = "loess") +
-      labs(x = linevar_choice_names[linevar_choice_values == input$index1],
-           y = linevar_choice_names[linevar_choice_values == input$index2],
-           title = paste("Interactive Line Graph of", 
-                         linevar_choice_names[linevar_choice_values == input$index2], 
-                         "by ",
-                         linevar_choice_names[linevar_choice_values == input$index1]),
-           subtitle = "Colored by National Priority Sites",
-           caption = "Data is collected from counties in the US. 
-           Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
-      theme(legend.position = "bottom",
-            plot.title.position = "plot",
-            panel.grid = element_line(FALSE),
-            panel.background = element_rect(fill = "black"))
+  output$linegraphcolor <- renderPlotly({
+   q <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
+                                              color = "superfund")) +
+          geom_smooth(methods = "loess") +
+          labs(x = linevar_choice_names[linevar_choice_values == input$index1],
+              y = linevar_choice_names[linevar_choice_values == input$index2],
+              title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+                            "by",
+                            linevar_choice_names[linevar_choice_values == input$index1]),
+              caption = "Data is collected from counties in the US. 
+              Refer to EQI website for a dictionary on the variables.",
+              color = "National Priority Sites") +
+          theme(legend.position = "bottom",
+                plot.title.position = "plot",
+                panel.background = element_rect(fill = "black"))
+   
+   ggplotly(q) %>%
+     layout(legend = list(x = 0.1, y = 0.9))
+   
   })
 },
+
 options = list(height = 500)
+
 )
 ```
 
