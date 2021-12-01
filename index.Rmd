@@ -256,7 +256,7 @@ ui <- fluidPage(
       selectInput(inputId = "state",
                   label = "Choose a state of interest:",
                   choices = state_choice_values,
-                  selected = "ALL"),
+                  selected = "Texas"),
       
       # Choose to color points by presence of a super fund site or not
       radioButtons(inputId = "pt_color",
