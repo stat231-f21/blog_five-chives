@@ -756,6 +756,8 @@ slr_data <- read_csv("final_data.csv") %>%
          mortality_rate = rate) %>% 
   mutate(mortality_rate = mortality_rate * 1000)
 
+theme_set(theme_classic())
+
 ggplot(slr_data, aes(x = med_income, y = (mortality_rate))) +
   geom_point(color = "darkgray", alpha = .6, shape = 20) +
   geom_smooth(method = "lm", se = FALSE, color = "#0047AB") +
