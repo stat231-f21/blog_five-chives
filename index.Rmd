@@ -1,7 +1,7 @@
 ---
 title: "Environmental and Sociodemographic Determinants of Mortality in the US"
 author: "Five Chives: Dasha Asienga, Caitlin Lambert, Elizabeth Zhang"
-date: "Last edited 11/30/21"
+date: "Last edited 12/02/21"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -56,13 +56,13 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 ## Questions
 
-* Are sociodemographic determinants of mortality being acknowledged in the scientific research community?
 * Does geographic location of a county have an effect on the environmental and health statistics of a county?
 * Does a classification as a Superfund Site make a county more likely to have detrimental environmental or health effects?
 * What environmental considerations or sociodemographic inequalities exist throughout the US and within individual states? How do they present?
 * What relationships, or lack thereof, exist between different sociodemographic variables? How strong are these relationships?
 * What’s the distribution of different sociodemographic factors in the US? Is it normal? Is it skewed? If so, in what direction is it skewed?
 * What conclusions and implications can we draw from the relationships between certain sociodemographic variables?
+* Are sociodemographic determinants of mortality being acknowledged in the scientific research community?
 
 # Data
 
