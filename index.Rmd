@@ -10,9 +10,9 @@ runtime: shiny
 ---
 
 ```{r setup, include = FALSE}
+# Load necessary packages
 library(tidyverse)
-library(kableExtra) # for example code; delete if not needed
-#packages for text analysis shiny app 
+library(kableExtra) 
 library(tidyverse)
 library(tidytext)
 library(textdata)
@@ -21,6 +21,20 @@ library(igraph)
 library(shiny)
 library(dplyr)
 library(plotly)
+library(shinythemes)
+library(DT)
+library(urbnmapr)
+library(ggplot2)
+library(RColorBrewer)
+library(ggiraph)
+library(naniar)
+library(sf)
+library(leaflet)
+library(geojsonio)
+library(maptools)
+library(tmap)
+library(pander)
+library(mathjaxr)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
@@ -194,25 +208,7 @@ I used a similar function for the density plot and used the `plotly` package to 
 Here is the embedded shiny app. The entire US is currently selected, but users have the choice to view a specific state. Click on the map to view values for each county.
 
 ### Interactive Map and Associated Plots
-
-```{r interactive-map-plots}
-#Load necessary packages
-library(shiny)
-library(shinythemes)
-library(tidyverse)
-library(DT)
-library(urbnmapr)
-library(ggplot2)
-library(RColorBrewer)
-library(ggiraph)
-library(naniar)
-library(sf)
-library(leaflet)
-library(dplyr)
-library(geojsonio)
-library(maptools)
-library(tmap)
-
+```{r map-plots-data, include = FALSE}
 # Import data on variables of interest as well as county geography
 county_data <- read_csv("interactive_state_app/county_data.csv")
 scatter_data <- read_csv("interactive_state_app/scatter_data.csv")
@@ -245,8 +241,9 @@ names(color_choice_values) <- color_choice_names
 
 # Selectize counties
 county_choices <- unique(scatter_data$county)
+```
 
-
+```{r interactive-map-plots}
 shinyApp(
   ############
 #    ui    #
@@ -560,19 +557,7 @@ The interactive line graph allows users to view the relationship between 2 index
 
 ```
 
-```{r interactive-line-graph-color}
-# Load packages 
-library(shiny)
-library(shinythemes)
-library(tidyverse)
-library(DT)
-library(ggplot2)
-library(RColorBrewer)
-library(ggiraph)
-library(naniar)
-library(dplyr)
-library(plotly)
-
+```{r line-graph-data, include = FALSE}
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
                            "vice_businesses", "education_businesses", "service_agencies", 
@@ -592,8 +577,9 @@ names(linevar_choice_values) <- linevar_choice_names
 linecolor_choice_values <- c("superfund", "na")
 linecolor_choice_names <- c("National Priority Sites", "Not colored")
 names(linecolor_choice_values) <- linecolor_choice_names
+```
 
-
+```{r interactive-line-graph-color}
 shinyApp(
   ############
 #    ui    #
@@ -698,38 +684,6 @@ In order to achieve this, I used the `MathJax` package in R in multiple ways. He
 Users are warned to check diagnostic conditions for linear models before drawing final conclusions. Because the primary purpose of the app is not to run statistical analyses on all the variables, that output is not provided for users. Ultimately, the purpose of the app is to fit simple linear models and allow users to see which variables are strongly correlated and explore what that might mean:
 
 ```{r slr}
-# Load packages 
-library(shiny)
-library(shinythemes)
-library(tidyverse)
-library(DT)
-library(ggplot2)
-library(RColorBrewer)
-library(ggiraph)
-library(naniar)
-library(dplyr)
-library(mosaic)
-library(plotly)
-library(rmarkdown)
-library(knitr)
-library(pander)
-library(mathjaxr)
-
-# Create choices for variables of interest
-slrvar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-                           "vice_businesses", "education_businesses", "service_agencies", 
-                           "healthcare_businesses", "commute_time", "fungicide", 
-                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                           "gini_coefficient")
-slrvar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-                          "Vice-Related Businesses", "Education-Related Businesses", 
-                          "Service Agencies", "Healthcare-Related Businesses", 
-                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
-                          "Insecticides Applied", "Percent Unemployed", 
-                          "Percent in Poverty",
-                          "Income Inequality")
-names(slrvar_choice_values) <- slrvar_choice_names
-
 shinyApp(
   ############
 #    ui    #
@@ -743,13 +697,13 @@ ui <- fluidPage(
       # Choose variable 1 of interest
       selectInput(inputId = "predictor",
                   label = "Choose predictor variable of choice (x-axis):",
-                  choices = slrvar_choice_values,
+                  choices = linevar_choice_values,
                   selected = "fungicide"),
       
       # Choose variable 2 of interest
       selectInput(inputId = "response",
                   label = "Choose response variable of choice (y-axis):",
-                  choices = slrvar_choice_values,
+                  choices = linevar_choice_values,
                   selected = "total_deaths")
       
     ),
@@ -800,8 +754,8 @@ server <- function(input, output) {
   output$regression <- renderPlotly({
     r <- ggplot(county_data, aes_string(x = input$predictor, y = input$response)) +
       stat_smooth(method = "lm", se = TRUE) +
-      ylab(slrvar_choice_names[slrvar_choice_values == input$response]) +
-      xlab(slrvar_choice_names[slrvar_choice_values == input$predictor]) +
+      ylab(linevar_choice_names[linevar_choice_values == input$response]) +
+      xlab(linevar_choice_names[linevar_choice_values == input$predictor]) +
       theme_minimal()
     
     ggplotly(r)
