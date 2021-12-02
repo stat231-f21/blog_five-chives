@@ -9,7 +9,7 @@ library(shiny)
 library(dplyr)
 
 #read in list of abstracts
-abstract_words <- read_csv("data/abstract_words.csv") 
+#abstract_words <- read_csv("data/abstract_words.csv") 
 
 #set seed and theme
 set.seed(83426)
@@ -72,23 +72,6 @@ interest_words$category[interest_words$word %in% c("environmental", "exposure")]
 
 ui <- fluidPage(
   
-  # title = "Abstracts", 
-  
-  # tabPanel(
-  #   title = "Count of top words",
-  #   
-  #   sidebarLayout(
-  #     
-  #     sidebarPanel(
-  #       sliderInput("year_a", "Year:",
-  #                   min = 1985, max = 2021,
-  #                   value = 2010, sep = "", 
-  #                   animate = animationOptions(interval = 500, loop = TRUE))), 
-  #     
-  #     mainPanel(plotOutput(outputId = "count")) 
-  #   )
-  # ), 
-  
   # tabPanel(
     titlePanel("Network of words used in research abstracts exploring mortality causes"),
 
@@ -104,7 +87,13 @@ ui <- fluidPage(
                        multiple = TRUE
         )
       ),
-      mainPanel(plotOutput(outputId = "network"))
+      mainPanel(
+        fluidRow(width = 12, 
+                 plotOutput(outputId = "network")), 
+        fluidRow(width = 5, 
+                 tableOutput(outputId = "plot_info"))
+        
+      )
     # )
   )
 )
@@ -114,23 +103,6 @@ ui <- fluidPage(
 ######
 
 server <- function(input, output) {
-  
-  # #plot for word count chart
-  # output$count <- renderPlot({
-  #   abstract_words %>% 
-  #     filter(publication_year == input$year_a & word != "mortality") %>% 
-  #     count(word, sort = TRUE) %>% #calculate counts
-  #     slice(1:10) %>% #choose top 10
-  #     ggplot(aes(x = reorder(word, n), y = n, 
-  #                color = word, fill = word)) +
-  #     geom_col() +
-  #     coord_flip() +
-  #     guides(color = "none", fill = "none") +
-  #     labs(x = NULL,
-  #          y = "Number of instances",
-  #          title = "The most common words in research abstracts exploring mortality")
-  # })
-  
 
   #words of interest not found in year
   interest_missing <- reactive({
@@ -141,9 +113,7 @@ server <- function(input, output) {
     else {data <- "NA"}
   })
   
-  #network
-  output$network <- renderPlot({
-    set.seed(83426)
+  abst_igraph <- reactive({
     #choose interest words from year
     network_words <- abstract_words %>% 
       filter(publication_year == input$year_b) %>% 
@@ -155,13 +125,13 @@ server <- function(input, output) {
       filter(publication_year == input$year_b) %>% #keeps only year of interest
       right_join(network_words, by = "word") %>% #only keeps interest words
       unique() %>% #remove repeats of connections in same abstract
-        select(pmid, word) %>%
-        table() %>%
-        crossprod() #creates co-occurence matrix
+      select(pmid, word) %>%
+      table() %>%
+      crossprod() #creates co-occurence matrix
     diag(df) <- 0 #sets connections between same word to 0
     df <- as.data.frame(df) #forces table to dataframe
     num_word <- ncol(df) #number of words = numbers of column
-
+    
     #define vertices and edges
     ve <- network_words #interest words from years, including counts
     ed <- df %>%
@@ -169,15 +139,20 @@ server <- function(input, output) {
       #gathers co-occurences from matrix, column names to "to" column, number of co-occurences to "weight"
       tidyr::gather(to, weight, 1:num_word) %>% 
       mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
-
+    
     #create igraph
-    abst_igraph <- graph_from_data_frame(d = ed,
+    graph_from_data_frame(d = ed,
                                          vertices = ve,
                                          directed = FALSE) %>%
       simplify() #remove duplicate edges
-
+  })
+  
+  #network
+  output$network <- renderPlot({
+    set.seed(83426)
+    
     #plot network
-    abst_network <- ggnetwork(abst_igraph)
+    abst_network <- ggnetwork(abst_igraph())
     ggplot(data = abst_network, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
       geom_edges(aes(size = weight), 
@@ -191,8 +166,19 @@ server <- function(input, output) {
       theme_blank() +
       labs(size = "Number", color = "Category", 
            caption = paste("Words not found: ", interest_missing(), 
-                           "\n Data source: PubMed"))
+                           "\n Data source: PubMed")) 
 
+  })
+  
+  output$plot_info <- renderText({
+    abst_stat <- data.frame(name = vertex_attr(abst_igraph(), "name"),
+                            strength = strength(abst_igraph(), 
+                                                weights = edge_attr(abst_igraph(), "Weight"))) 
+    abst_stat %>% 
+      arrange(desc(strength)) %>% 
+      head(5) %>% 
+      knitr::kable("html", row.names = FALSE, col.names = c("Word", "Strength")) 
+      
   })
 }
 
