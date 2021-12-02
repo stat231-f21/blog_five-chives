@@ -52,8 +52,6 @@ options(knitr.kable.NA = '')
 
 In Louisiana, a row of toxic waste producing plants has gained national attention. In this area, large corporations continue to release larger and larger amounts of cancer-causing chemicals into the environment, and the effects on community health have been detrimental enough for this area to receive the name "Cancer Alley". The impacts of this unregulated pollution are not equally distributed: the groups at risk are predominantly black and low-income communities. Around the country, industries release fatal amounts of toxic chemicals into our environment, and underprivileged communities are most commonly the victims of these actions. The unequal distribution of wealth and power in our country, created by social systems that protect certain groups and leave others behind, has deep, historically established effects that extend even to the biological level. This is realized in the entangled relationship between sociodemographic inequality in the United States and toxicity in the environment. An individual's place within these imbricated factors is out of their control, and, yet, they can become major determinant's of an individual's health and wellbeing. 
 
-[[CITE LITERATURE AND SPECIFIC INFORMATION ON THESE EFFECTS]]
-
 ## Questions
 
 * Does geographic location of a county have an effect on the environmental and health statistics of a county?
@@ -66,7 +64,7 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 # Data
 
-In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). [[ADD MORE HERE]]
+In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority in regards to their pollution level, from Wikipedia on 10/2/21. 
 
 In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words).
 
@@ -463,100 +461,6 @@ Further than just looking at the distribution of variables of interest nationwid
 
 The interactive line graph allows users to view the relationship between 2 indexes of choice through a smooth curve. They also have the option to distinguish the data by color depending on whether counties are national priority sites. They can explore as many relationships as they choose. I used the `plotly` package to further allow users to hover over the line and view the value at a specific position on the plot. As opposed to the scatterplot in the shiny app above which has a fixed x-axis of median income, this app allows users all the flexibility. Here is the embedded Shiny app:
 
-
-```{r interactive-line-graph}
-# #Load packages 
-# library(shiny)
-# library(shinythemes)
-# library(tidyverse)
-# library(DT)
-# library(ggplot2)
-# library(RColorBrewer)
-# library(ggiraph)
-# library(naniar)
-# library(dplyr)
-# library(plotly)
-# 
-# # Import data on variables of interest
-# county_data <- read_csv("interactive_state_app/county_data.csv")
-# 
-# # Create choices for variables of interest
-# linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-#                            "vice_businesses", "education_businesses", "service_agencies", 
-#                            "healthcare_businesses", "commute_time", "fungicide", 
-#                            "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-#                            "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
-# linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-#                           "Vice-Related Businesses", "Education-Related Businesses", 
-#                           "Service Agencies", "Healthcare-Related Businesses", 
-#                           "Commute Time", "Fungicides Applied", "Herbicides Applied",
-#                           "Insecticides Applied", "Percent Unemployed", 
-#                           "Percent in Poverty",
-#                           "Income Inequality", "Median Income", "EQI")
-# names(linevar_choice_values) <- linevar_choice_names
-# 
-# 
-# shinyApp(
-#   ############
-# #    ui    #
-# ############
-# ui <- fluidPage(
-#   
-#   titlePanel("Line Graphs of Variables of Interest"),
-#   
-#   sidebarLayout(
-#     sidebarPanel(
-#       # Choose variable 1 of interest
-#       selectInput(inputId = "index1",
-#                   label = "Choose index 1 of choice (x-axis):",
-#                   choices = linevar_choice_values,
-#                   selected = "fungicide"),
-#       
-#       # Choose variable 2 of interest
-#       selectInput(inputId = "index2",
-#                   label = "Choose index 2 of choice (y-axis):",
-#                   choices = linevar_choice_values,
-#                   selected = "total_deaths")
-#       
-#     ),
-#     
-#     mainPanel(plotlyOutput(outputId = "linegraph"))
-#     
-#   )
-# ),
-# 
-# ############
-# # server   #
-# ############
-# server <- function(input, output) {
-#   
-#   output$linegraph <- renderPlotly({
-#     
-#     p <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
-#       geom_smooth(methods = "loess") +
-#       labs(x = linevar_choice_names[linevar_choice_values == input$index1],
-#            y = linevar_choice_names[linevar_choice_values == input$index2],
-#            title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
-#                          "by",
-#                          linevar_choice_names[linevar_choice_values == input$index1]),
-#            caption = "Data is collected from counties in the US.
-#               Refer to EQI website for a dictionary on the variables.") +
-#       theme(legend.position = "bottom",
-#             plot.title.position = "plot",
-#             panel.background = element_rect(fill = "black"))
-#     
-#     ggplotly(p)
-#   })
-#   
-#   
-# },
-# 
-# options = list(height = 500)
-# 
-# )
-
-```
-
 ```{r line-graph-data, include = FALSE}
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
@@ -844,6 +748,27 @@ Just like in the previous Shiny app, there are many insights that can be drawn f
 
 Ultimately, this is just one question resulting from one bivariate analysis, but there are many such questions and considerations that a user can explore using this application.
 
+## Mortality rate vs. Income
+
+```{r death-income, fig.width = 6, fig.height = 4}
+slr_data <- read_csv("final_data.csv") %>% 
+  select(med_income = ln_hh_inc_x, 
+         mortality_rate = rate) %>% 
+  mutate(mortality_rate = mortality_rate * 1000)
+
+ggplot(slr_data, aes(x = med_income, y = (mortality_rate))) +
+  geom_point(color = "darkgray", alpha = .6, shape = 20) +
+  geom_smooth(method = "lm", se = FALSE, color = "#0047AB") +
+  xlab("Median Income (ten thousand dollars)") +
+  ylab("Mortality Rate (deaths per 1,000 people)") +
+  labs(title = "Relationship between median income and mortality", 
+       subtitle = "U.S. counties, 2006-2010", 
+       caption = "Data from EPA and CDC")
+
+sjPlot::tab_model(lm(mortality_rate ~ med_income, data = slr_data))
+```
+
+There is a statistically significant negative linear relationship between mortality rate and median income in counties in the US from 2006-2010. 
 
 ## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
 
@@ -932,7 +857,7 @@ shinyApp(
 ui <- fluidPage(
   
   # tabPanel(
-    titlePanel("Words used in research abstracts exploring causes of mortality"),
+    titlePanel("Network of words used in research abstracts exploring mortality causes"),
 
     sidebarLayout(
       sidebarPanel(
@@ -946,7 +871,13 @@ ui <- fluidPage(
                        multiple = TRUE
         )
       ),
-      mainPanel(plotOutput(outputId = "network"))
+      mainPanel(
+        fluidRow(width = 12, 
+                 plotOutput(outputId = "network")), 
+        fluidRow(width = 5, 
+                 tableOutput(outputId = "plot_info"))
+        
+      )
     # )
   )
 ), 
@@ -956,7 +887,7 @@ ui <- fluidPage(
 ######
 
 server <- function(input, output) {
-  
+
   #words of interest not found in year
   interest_missing <- reactive({
     present <- abstract_words %>% 
@@ -966,9 +897,7 @@ server <- function(input, output) {
     else {data <- "NA"}
   })
   
-  #network
-  output$network <- renderPlot({
-    set.seed(83426)
+  abst_igraph <- reactive({
     #choose interest words from year
     network_words <- abstract_words %>% 
       filter(publication_year == input$year_b) %>% 
@@ -977,60 +906,72 @@ server <- function(input, output) {
       left_join(interest_words, by = "word")
     #create dataframe
     df <- abstract_words %>%
-      filter(publication_year == input$year_b) %>% 
+      filter(publication_year == input$year_b) %>% #keeps only year of interest
       right_join(network_words, by = "word") %>% #only keeps interest words
       unique() %>% #remove repeats of connections in same abstract
-        select(pmid, word) %>%
-        table() %>%
-        crossprod() #creates co-occurence matrix
+      select(pmid, word) %>%
+      table() %>%
+      crossprod() #creates co-occurence matrix
     diag(df) <- 0 #sets connections between same word to 0
-    df <- as.data.frame(df) 
+    df <- as.data.frame(df) #forces table to dataframe
+    num_word <- ncol(df) #number of words = numbers of column
     
-    num_word <- ncol(df) 
-
     #define vertices and edges
-    ve <- network_words 
+    ve <- network_words #interest words from years, including counts
     ed <- df %>%
-      mutate(from = rownames(.)) %>%
-      tidyr::gather(to, weight, 1:num_word) %>% #gathers co-instances from matrix
-      mutate(weight = ifelse(weight == 0, NA, weight))
-
+      mutate(from = rownames(.)) %>% #create "from" w/ row names for gather function 
+      #gathers co-occurences from matrix, column names to "to" column, number of co-occurences to "weight"
+      tidyr::gather(to, weight, 1:num_word) %>% 
+      mutate(weight = ifelse(weight == 0, NA, weight)) #weights of 0 to NA
+    
     #create igraph
-    abst_igraph <- graph_from_data_frame(d = ed,
+    graph_from_data_frame(d = ed,
                                          vertices = ve,
                                          directed = FALSE) %>%
       simplify() #remove duplicate edges
-
+  })
+  
+  #network
+  output$network <- renderPlot({
+    set.seed(83426)
+    
     #plot network
-    abst_network <- ggnetwork(abst_igraph)
+    abst_network <- ggnetwork(abst_igraph())
     ggplot(data = abst_network, aes(x = x, y = y,
                                    xend = xend, yend = yend)) +
-      geom_edges(aes(size = weight, 
-                     alpha = ifelse(category == "sociodemographic", 
-                                    "Connected", "Not Connected")), 
-                 color = "gray", 
-                 curvature = .1) +
+      geom_edges(aes(size = weight), 
+                    color = "lightgray", curvature = .1) +
       geom_nodes(aes(size = n, color = category), shape = 20)  +
-      geom_nodetext_repel(aes(label = name, size = n), 
+      geom_nodetext_repel(aes(label = name, size = n), repel = TRUE, 
                     point.padding = unit(0.2, "lines"), color = "gray10") +
-      colorspace::scale_color_discrete_qualitative(palette = "Dark 3") +
-      guides(size = guide_legend(order = 2), color = guide_legend(order = 1), 
-             fill = guide_legend(order = 3)) +
       ggraph::scale_edge_width(c(0.5, 5)) +
-      scale_alpha_discrete(range = c(1, 0.5)) +
+      # geom_nodes() +
+      # geom_nodelabel(aes(label = name, size = n), nudge_x = .01) +
       theme_blank() +
-      labs(size = "Number", color = "Category", alpha = "Sociodemographic?", 
+      labs(size = "Number", color = "Category", 
            caption = paste("Words not found: ", interest_missing(), 
-                           "\n Data source: PubMed, years before 1985 ommitted due to insufficient data"))
+                           "\n Data source: PubMed")) 
 
   })
+  
+  output$plot_info <- renderText({
+    abst_stat <- data.frame(name = vertex_attr(abst_igraph(), "name"),
+                            strength = strength(abst_igraph(), 
+                                                weights = edge_attr(abst_igraph(), "Weight"))) 
+    abst_stat %>% 
+      arrange(desc(strength)) %>% 
+      head(5) %>% 
+      knitr::kable("html", row.names = FALSE, col.names = c("Word", "Strength")) 
+      
+  })
 }, 
-options = list(height = 600)
+
+options = list(height = 650)
 )
 
 ```
 
-In the above network, sociodemographic factors tend to be on the edge of the network in earlier years, and the networks tend to be more disconnected. As the years progress, though, at around 2010-2013, the network tend to become much more connected. From 2013-2021, sociodemographic factors also tend to become more and more central to the network. 
+In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, "social" supersedes even the word "mortality" in its centrality. By 2021, we see the words "disparities" and "racial" enter the top 5 central words in abstracts. 
 
 ### Code
 
@@ -1063,11 +1004,13 @@ ed <- df %>%
 
 The map displaying county data shows that there are some geographic factors that influence the statistics of the counties' environmental and health. There are clear regional differences attributed to proportion of coal mining and amount of insecticide applied. In addition, we can spot a urban-rural divide in terms of higher income inequality in counties that have major cities and less healthcare-related businesses in rural areas. Surprisingly, there are actually only very subtle differences between counties that are classified as Superfund Sites versus those that are not. Part of this may be because superfund sites are clustered on the coasts and in heavily-populated areas, which overall have a higher income and more healthcare options.
 
-From the second interactive map and associated plots, tt’s evident that many socio demographic factors interact with each other to explain some of the geographic inequalities and environmental considerations throughout the US. In looking at the map of the entire US, it is evident that the different socio demographic indices vary between states, and in looking closer at the individual states, it is clear that these indices vary even within states between counties. Looking at specific states also highlights how some indices have a normal distribution in some while a skewed distribution in others. After examining these statewide and nationwide differences, one might wonder what this all means. Looking at the bivariate relationships highlights the importance and huge implications for this, for example, in looking at how fungicide application has strong linear relationship with total deaths and a t-test for slope in a simple linear regression model yields a p-value of 0. The map shows that fungicide use is not evenly spread throughout the nation, and it’s important to grapple with what factors contribute to this distribution. A limitation of this project is that we did not have data nor analyses to look closer at what the demographic makeup of specific locations is, but further analyses can extend on our work in understanding what further factors there might be to consider. 
+From the second interactive map and associated plots, tt’s evident that many socio demographic factors interact with each other to explain some of the geographic inequalities and environmental considerations throughout the US. In looking at the map of the entire US, it is evident that the different socio demographic indices vary between states, and in looking closer at the individual states, it is clear that these indices vary even within states between counties. Looking at specific states also highlights how some indices have a normal distribution in some while a skewed distribution in others. After examining these statewide and nationwide differences, one might wonder what this all means. Looking at the bivariate relationships highlights the importance and huge implications for this, for example, in looking at how fungicide application has strong linear relationship with total deaths and a t-test for slope in a simple linear regression model yields a p-value of 0. The map shows that fungicide use is not evenly spread throughout the nation, and it’s important to grapple with what factors contribute to this distribution. 
 
-The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in connectedness of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
+Thus, we have substantially confirmed the relationship between sociodemographic and environmental factors and mortality. Our analysis of research abstracts demonstrates the increasing acknowledgement of this relationship. The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in connectedness of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. In particular, the rise of the words "racial" and "disparities" demonstrate acknowledgement of the structural inequalities inherent to these issues. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
 
 ## Limitations and Future Directions
+
+A limitation of this project is that we did not have data nor analyses to look closer at what the demographic makeup of specific locations is, but further analyses can extend on our work in understanding what further factors there might be to consider. We were also limited in that our data were from the time frame of 2006-2010. Future directions may include expanding the time frame and finding data for individual years, so that we may track how our relationships change over time. Understanding whether effects are increasing or decreasing can inform how we understand the efficacy of current interventions. 
 
 Our findings on the focus of research over time is promising. The rise in the consideration of social factors and their connection to mortality shows increased acknowledgement of the inequality of mortality risks. However, the gap between research and policy is often wide and difficult to bridge. Progressive findings in scientific abstracts, while representative of the inclusion of social thought into clinical work, are not an accurate measure of whether tangible change is being generated from these conclusions. Through lobbying, corporations have a much larger influence in restricting the passage of policies that may reduce their profits than in research (though the influence on scientific research is still present, through funding sources). To assess whether policy makers are putting forth legislation that addresses the root socio demographic causes of unequal mortality risk, and whether that inequality is even acknowledged in the first place, we would like to  extend our project in the future by analyzing legislation that is proposed/passed in regards to environmental toxicity and mortality. This can allow us to understand whether there is a lag between research and legislation and to explore how the government is addressing health inequalities. 
 
