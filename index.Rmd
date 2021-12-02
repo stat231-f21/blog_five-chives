@@ -925,7 +925,7 @@ animate(anim, #object to create gif
 
 ### Interactive network
 
-```{r network-display2, out.extra='style="border: none;"', out.width='56%'}
+```{r network-wrangling, include = FALSE, eval = TRUE}
 #read in list of abstracts
 abstract_words <- read_csv("data/abstract_words.csv") 
 
@@ -967,7 +967,9 @@ interest_words$category[interest_words$word %in% c("social", "disparities", "rac
 interest_words$category[interest_words$word %in% c("community", "family")] <- "contextual"
 interest_words$category[interest_words$word %in% c("genetic")] <- "genetic"
 interest_words$category[interest_words$word %in% c("environmental", "exposure")] <- "exposure"
+```
 
+```{r network-display, out.extra='style="border: none;"', out.width='56%'}
 shinyApp(
 ######
 #ui
