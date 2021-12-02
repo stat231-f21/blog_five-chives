@@ -20,6 +20,7 @@ library(ggnetwork)
 library(igraph)
 library(shiny)
 library(dplyr)
+library(plotly)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
@@ -42,8 +43,15 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 ## Questions
 
 * Are sociodemographic determinants of mortality being acknowledged in the scientific research community?
+<<<<<<< HEAD
 * Does geographic location of a county have an effect on the environmental and health statistics of a county?
 * Does a classification as a Superfund Site make a county more likely to have detrimental environmental or health effects?
+=======
+* What environmental considerations or sociodemographic inequalities exist throughout the US and within individual states? How do they present?
+* What relationships, or lack thereof, exist between different sociodemographic variables? How strong are these relationships?
+* What’s the distribution of different sociodemographic factors in the US? Is it normal? Is it skewed? If so, in what direction is it skewed?
+* What conclusions and implications can we draw from the relationships between certain sociodemographic variables?
+>>>>>>> 8c4d2bae473324b5252bd07d639ff63e8a371333
 
 # Data
 
@@ -156,9 +164,9 @@ This density graph was created to examine the difference between county environm
 
 ## Relationships by State
 
-For our second visualization, we were interested in looking at a different choropleth map that shows indices of our variables of interests not only nationwide, but also statewide. For this visualization, we were interested in giving users the choice to explore these relationships closer at the state level, and a person can even zoom into the choropleth map above and view both visualizations side by side. In order to aid this, users are able to view a scatter plot and a density plot of their variable of interest for all the counties in their state of interest. This can help highlight inequalities within their state and users are further able to view their county of interest on the scatter plots and examine their county relative to others in the state. 
+For the second visualization, we were interested in looking at a different choropleth map that shows indices of our variables of interests not only nationwide, but also statewide. For this visualization, we were interested in giving users the choice to explore these relationships closer at the state level, and a person can even zoom into the choropleth map above and view both visualizations side by side. In order to aid this, users are able to view a scatter plot and a density plot of their variable of interest for all the counties in their state of interest. This can help highlight inequalities within their state and users are further able to view their counties of interest on the scatter plots and examine them relative to others in the state. 
 
-Here is the code that I used to allow users to look closer at points selected on the scatter plot. They can select counties of interest from the selectize input function. I used similar code for the density plot. 
+The click-hover-brush feature allows users to see values of a specific county in the scatter plot and a specific position on the plot of the density plot. Here is the code that I used to allow users to look closer at counties or points selected on the scatter plot. They can select counties of interest from the selectize input function. 
 
 ```{r hover code, echo = TRUE, eval = FALSE}
 # Created Function for Hover/ Click Interactivity 
@@ -182,7 +190,9 @@ Here is the code that I used to allow users to look closer at points selected on
   })
 ```
 
-Here is the embedded shiny app. Texas is currently selected, but users have the choice to change the state or even view the map and data for the entire US. 
+I used a similar function for the density plot and used the `plotly` package to enable hover interactivity for the map.
+
+Here is the embedded shiny app. The entire US is currently selected, but users have the choice to view a specific state. Click on the map to view values for each county.
 
 ### Interactive Map and Associated Plots
 
@@ -230,8 +240,8 @@ var_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter",
 names(var_choice_values) <- var_choice_names
 
 # For button through which users can customize distinguishing variables by color
-color_choice_values <- "superfund"
-color_choice_names <- "National Priority Sites"
+color_choice_values <- c("superfund")
+color_choice_names <- c("National Priority Sites")
 names(color_choice_values) <- color_choice_names
 
 # Selectize counties
@@ -252,7 +262,7 @@ ui <- fluidPage(
       selectInput(inputId = "index",
                   label = "Choose environmental index of choice:",
                   choices = var_choice_values,
-                  selected = "pct_poverty"),
+                  selected = "fungicide"),
       
       # Choose states of interest to display
       selectInput(inputId = "state",
@@ -261,10 +271,10 @@ ui <- fluidPage(
                   selected = "Texas"),
       
       # Choose to color points by presence of a super fund site or not
-      checkboxGroupInput(inputId = "pt_color",
-                         label = "Color scatter plot points by:",
-                         choices = color_choice_values,
-                         selected = "superfund"),
+      radioButtons(inputId = "pt_color",
+                   label = "Line graphs are colored by:",
+                   choices = color_choice_values,
+                   selected = NULL),
       
       # Choose to view counties of interest in selected states
       selectizeInput(inputId = "county_name",
@@ -274,7 +284,7 @@ ui <- fluidPage(
                      multiple = TRUE)
     ),
     
-    mainPanel(plotOutput(outputId = "mapvar"),
+    mainPanel(plotlyOutput(outputId = "mapvar"),
               splitLayout(cellwidths = c("50%", "50%"), 
                           plotOutput(outputId = "scatter",
                                      click = "plot_click",
@@ -313,8 +323,8 @@ server <- function(input, output) {
   
   # Create Interactive Map
   
-  output$mapvar <- renderPlot({
-    ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
+  output$mapvar <- renderPlotly({
+  m <-  ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
                                                        y = "lat", 
                                                        group = "group", 
                                                        fill = input$index)) +
@@ -328,10 +338,12 @@ server <- function(input, output) {
            y = "latitude",
            fill = var_choice_names[var_choice_values == input$index],
            title = paste(var_choice_names[var_choice_values == input$index], 
-                         "For Counties in the US"),
-           subtitle = paste("Gradient Map for ", input$state)) +
-      theme(panel.grid = element_line(FALSE),
-            panel.background = element_rect("black"))
+                         "For ",
+                         input$state)) +
+      theme(panel.background = element_rect("black"))
+  
+  ggplotly(m)
+  
   })
   
   # Create data for scatter plot reacting to filters
@@ -445,13 +457,111 @@ options = list(height = 1000)
 
 It’s visible that there is inequality and different environmental considerations throughout the United States. In looking at a map of the entire country or zooming in to a specific state, it’s visible that the value of the variables vary and there are areas that report higher or lower values for specific indices. For example, there are disproportionately more coal mines in mountainous areas and higher insecticide use in rural areas. Additionally, there is a visible rural-urban divide with regard to income level and income equality. 
 
-Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their curiosity or knowledge. 
+Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their individual questions and draw their conclusions.
 
 ## Inter-Variable Relationships
 
+Further than just looking at the distribution of variables of interest nationwide and statewide, we were further interested in looking at inter-variable relationships and allowing users to explore relationships of interest. To aid this, I created 2 additional Shiny apps: an interactive line graph and an interactive app that produces a simple linear regression output for any 2 variables of interest.
+
 ### Interactive Line Graphs
 
+The interactive line graph allows users to view the relationship between 2 indexes of choice through a smooth curve. They also have the option to distinguish the data by color depending on whether counties are national priority sites. They can explore as many relationships as they choose. I used the `plotly` package to further allow users to hover over the line and view the value at a specific position on the plot. As opposed to the scatterplot in the shiny app above which has a fixed x-axis of median income, this app allows users all the flexibility. Here is the embedded Shiny app:
+
+
 ```{r interactive-line-graph}
+# #Load packages 
+# library(shiny)
+# library(shinythemes)
+# library(tidyverse)
+# library(DT)
+# library(ggplot2)
+# library(RColorBrewer)
+# library(ggiraph)
+# library(naniar)
+# library(dplyr)
+# library(plotly)
+# 
+# # Import data on variables of interest
+# county_data <- read_csv("interactive_state_app/county_data.csv")
+# 
+# # Create choices for variables of interest
+# linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
+#                            "vice_businesses", "education_businesses", "service_agencies", 
+#                            "healthcare_businesses", "commute_time", "fungicide", 
+#                            "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+#                            "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
+# linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
+#                           "Vice-Related Businesses", "Education-Related Businesses", 
+#                           "Service Agencies", "Healthcare-Related Businesses", 
+#                           "Commute Time", "Fungicides Applied", "Herbicides Applied",
+#                           "Insecticides Applied", "Percent Unemployed", 
+#                           "Percent in Poverty",
+#                           "Income Inequality", "Median Income", "EQI")
+# names(linevar_choice_values) <- linevar_choice_names
+# 
+# 
+# shinyApp(
+#   ############
+# #    ui    #
+# ############
+# ui <- fluidPage(
+#   
+#   titlePanel("Line Graphs of Variables of Interest"),
+#   
+#   sidebarLayout(
+#     sidebarPanel(
+#       # Choose variable 1 of interest
+#       selectInput(inputId = "index1",
+#                   label = "Choose index 1 of choice (x-axis):",
+#                   choices = linevar_choice_values,
+#                   selected = "fungicide"),
+#       
+#       # Choose variable 2 of interest
+#       selectInput(inputId = "index2",
+#                   label = "Choose index 2 of choice (y-axis):",
+#                   choices = linevar_choice_values,
+#                   selected = "total_deaths")
+#       
+#     ),
+#     
+#     mainPanel(plotlyOutput(outputId = "linegraph"))
+#     
+#   )
+# ),
+# 
+# ############
+# # server   #
+# ############
+# server <- function(input, output) {
+#   
+#   output$linegraph <- renderPlotly({
+#     
+#     p <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
+#       geom_smooth(methods = "loess") +
+#       labs(x = linevar_choice_names[linevar_choice_values == input$index1],
+#            y = linevar_choice_names[linevar_choice_values == input$index2],
+#            title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+#                          "by",
+#                          linevar_choice_names[linevar_choice_values == input$index1]),
+#            caption = "Data is collected from counties in the US.
+#               Refer to EQI website for a dictionary on the variables.") +
+#       theme(legend.position = "bottom",
+#             plot.title.position = "plot",
+#             panel.background = element_rect(fill = "black"))
+#     
+#     ggplotly(p)
+#   })
+#   
+#   
+# },
+# 
+# options = list(height = 500)
+# 
+# )
+
+```
+
+```{r interactive-line-graph-color}
 # Load packages 
 library(shiny)
 library(shinythemes)
@@ -462,24 +572,28 @@ library(RColorBrewer)
 library(ggiraph)
 library(naniar)
 library(dplyr)
-
-# Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data.csv")
+library(plotly)
 
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-                       "vice_businesses", "education_businesses", "service_agencies", 
-                       "healthcare_businesses", "commute_time", "fungicide", 
-                       "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                       "gini_coefficient")
+                           "vice_businesses", "education_businesses", "service_agencies", 
+                           "healthcare_businesses", "commute_time", "fungicide", 
+                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
 linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-                      "Vice-Related Businesses", "Education-Related Businesses", 
-                      "Service Agencies", "Healthcare-Related Businesses", 
-                      "Commute Time", "Fungicides Applied", "Herbicides Applied",
-                      "Insecticides Applied", "Percent Unemployed", 
-                      "Percent in Poverty",
-                      "Income Inequality")
+                          "Vice-Related Businesses", "Education-Related Businesses", 
+                          "Service Agencies", "Healthcare-Related Businesses", 
+                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                          "Insecticides Applied", "Percent Unemployed", 
+                          "Percent in Poverty",
+                          "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
+
+# For label to distinguish variables by color
+linecolor_choice_values <- c("superfund", "na")
+linecolor_choice_names <- c("National Priority Sites", "Not colored")
+names(linecolor_choice_values) <- linecolor_choice_names
+
 
 shinyApp(
   ############
@@ -487,7 +601,7 @@ shinyApp(
 ############
 ui <- fluidPage(
   
-  titlePanel("Line Graphs of Variables of Interest"),
+  titlePanel("Line Graphs of Variables Colored by National Priority Sites"),
   
   sidebarLayout(
     sidebarPanel(
@@ -501,45 +615,281 @@ ui <- fluidPage(
       selectInput(inputId = "index2",
                   label = "Choose index 2 of choice (y-axis):",
                   choices = linevar_choice_values,
-                  selected = "total_deaths")
-    
+                  selected = "total_deaths"),
+      
+      radioButtons(inputId = "pt_color",
+                   label = "Color line graphs by:",
+                   choices = linecolor_choice_values,
+                   selected = NULL)
+      
     ),
     
-    mainPanel(verbatimTextOutput(outputId = "linegraph"))
-              
+    mainPanel(plotlyOutput(outputId = "linegraphcolor"))
+    
+  )
+),
+
+############
+# server   #
+############
+
+
+server <- function(input, output) {
+  
+  
+  
+  output$linegraphcolor <- renderPlotly({
+   q <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
+                                    color = ifelse(
+                                      input$pt_color == "superfund", 
+                                      "superfund", FALSE)))+
+          geom_smooth(methods = "loess") +
+          labs(x = linevar_choice_names[linevar_choice_values == input$index1],
+              y = linevar_choice_names[linevar_choice_values == input$index2],
+              title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+                            "by",
+                            linevar_choice_names[linevar_choice_values == input$index1]),
+              caption = "Data is collected from counties in the US. 
+              Refer to EQI website for a dictionary on the variables.",
+              color = "National Priority Sites") +
+          theme(legend.position = "bottom",
+                plot.title.position = "plot",
+                panel.background = element_rect(fill = "black"))
+   
+   ggplotly(q) %>%
+     layout(legend = list(x = 0.1, y = 0.9))
+   
+  })
+},
+
+options = list(height = 500)
+
+)
+```
+
+Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app. We can look at one conclusion in-depth. At the moment, fungicide application and total deaths is selected and it’s interesting to see how the total number of deaths appears to increase as the amount of fungicides applied. The total number of deaths seem to increase much faster depending on the amount of fungicide applied for counties that are national priority sites. The entire line graph is also higher for these counties. This suggests that there may be many other factors at play at the sites, given that they are flagged as having higher toxicological levels, that may work together to exacerbate the effects of fungicide applied on total deaths and make populations in these counties more vulnerable. 
+
+### Interactive Simple Linear Regression 
+
+Lastly, to further allow users to explore bivariate relationships in much further depth, I created a Shiny application that runs a linear regression model on any 2 variables of interest. The application reactively takes in any 2 variables of interest, fits a simple linear regression model, produces the summary output and a linear model plot, pulls out important statistical values such as the adjusted r-squared and the p-value, and then interprets the results on behalf of the user. The reactive linear model function that I used is as follows:
+
+```{r lm-function, echo = TRUE, eval = FALSE}
+# Create reactive linear model formula
+  lm1 <- reactive({
+    lm(reformulate(input$predictor, input$response), data = county_data)
+    })
+```
+
+In order to achieve this, I used the `MathJax` package in R in multiple ways. Here is an example of how I used the package to pull out important statistical results:
+
+```{r mathjax, echo = TRUE, eval = FALSE}
+ # Pull out and print results from SLR output
+  output$results <- renderUI({
+    withMathJax(
+      paste0(
+        "Adj. \\( R^2 = \\) ", round(summary(lm1())$adj.r.squared, 3),
+        ", \\( \\beta_0 = \\) ", round(lm1()$coef[[1]], 3),
+        ", \\( \\beta_1 = \\) ", round(lm1()$coef[[2]], 3),
+        ", P-value ", "\\( = \\) ", signif(summary(lm1())$coef[2, 4], 3)
+      )
     )
-  ),
+  })
+```
+
+Users are warned to check diagnostic conditions for linear models before drawing final conclusions. Because the primary purpose of the app is not to run statistical analyses on all the variables, that output is not provided for users. Ultimately, the purpose of the app is to fit simple linear models and allow users to see which variables are strongly correlated and explore what that might mean:
+
+```{r slr}
+# Load packages 
+library(shiny)
+library(shinythemes)
+library(tidyverse)
+library(DT)
+library(ggplot2)
+library(RColorBrewer)
+library(ggiraph)
+library(naniar)
+library(dplyr)
+library(mosaic)
+library(plotly)
+library(rmarkdown)
+library(knitr)
+library(pander)
+library(mathjaxr)
+
+# Create choices for variables of interest
+slrvar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
+                           "vice_businesses", "education_businesses", "service_agencies", 
+                           "healthcare_businesses", "commute_time", "fungicide", 
+                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
+                           "gini_coefficient")
+slrvar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
+                          "Vice-Related Businesses", "Education-Related Businesses", 
+                          "Service Agencies", "Healthcare-Related Businesses", 
+                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
+                          "Insecticides Applied", "Percent Unemployed", 
+                          "Percent in Poverty",
+                          "Income Inequality")
+names(slrvar_choice_values) <- slrvar_choice_names
+
+shinyApp(
+  ############
+#    ui    #
+############
+ui <- fluidPage(
+  
+  titlePanel("Simple Linear Regression of 2 Variables of Interest"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      # Choose variable 1 of interest
+      selectInput(inputId = "predictor",
+                  label = "Choose predictor variable of choice (x-axis):",
+                  choices = slrvar_choice_values,
+                  selected = "fungicide"),
+      
+      # Choose variable 2 of interest
+      selectInput(inputId = "response",
+                  label = "Choose response variable of choice (y-axis):",
+                  choices = slrvar_choice_values,
+                  selected = "total_deaths")
+      
+    ),
+    
+    mainPanel(
+      tags$b("Compute parameters in R:"),
+      verbatimTextOutput("summary"),
+      br(),
+      br(),
+      tags$b("Regression plot:"),
+      uiOutput(outputId = "results"),
+      plotlyOutput(outputId = "regression"),
+      br(),
+      br(),
+      tags$b("Interpretation:"),
+      uiOutput(outputId = "interpretation")
+      )
+    
+  )
+),
 
 ############
 # server   #
 ############
 server <- function(input, output) {
- 
-  output$linegraph <- renderPlot({
-    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
-      geom_smooth(methods = "loess") +
-      labs(x = linevar_choice_names[linevar_choice_values == input$index1],
-           y = linevar_choice_names[linevar_choice_values == input$index2],
-           title = paste("Interactive Line Graph of", 
-                         linevar_choice_names[linevar_choice_values == input$index2], 
-                         "by ",
-                         linevar_choice_names[linevar_choice_values == input$index1]),
-           subtitle = "Choose both variables of interest",
-           caption = "Data is collected from counties in the US.
-           Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
-      theme(legend.position = "bottom",
-            plot.title.position = "plot",
-            panel.grid = element_line(FALSE),
-            panel.background = element_rect(fill = "black"))
+  
+  # Create reactive linear model formula
+  lm1 <- reactive({
+    lm(reformulate(input$predictor, input$response), data = county_data)
+    })
+  
+  # Create summary output of a simple linear regression
+  output$summary <- renderPrint({summary(lm1())})
+  
+  # Pull out and print results from SLR output
+  output$results <- renderUI({
+    withMathJax(
+      paste0(
+        "Adj. \\( R^2 = \\) ", round(summary(lm1())$adj.r.squared, 3),
+        ", \\( \\beta_0 = \\) ", round(lm1()$coef[[1]], 3),
+        ", \\( \\beta_1 = \\) ", round(lm1()$coef[[2]], 3),
+        ", P-value ", "\\( = \\) ", signif(summary(lm1())$coef[2, 4], 3)
+      )
+    )
   })
   
+  # Generate regression plot
+  output$regression <- renderPlotly({
+    r <- ggplot(county_data, aes_string(x = input$predictor, y = input$response)) +
+      stat_smooth(method = "lm", se = TRUE) +
+      ylab(slrvar_choice_names[slrvar_choice_values == input$response]) +
+      xlab(slrvar_choice_names[slrvar_choice_values == input$predictor]) +
+      theme_minimal()
+    
+    ggplotly(r)
+  }) 
+  
+  # Draw conclusions and print out interpretation
+  output$interpretation <- renderUI({
+    if (summary(lm1())$coefficients[1, 4] < 0.05 & 
+        summary(lm1())$coefficients[2, 4] < 0.05) {
+      withMathJax(
+        paste0("*Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("For a (hypothetical) value of ", input$predictor, 
+               " = 0, the mean of ", input$response, " = ", 
+               round(lm1()$coef[[1]], 3), "."),
+        br(),
+        br(),
+        paste0("For an increase of one unit of ", input$predictor, ", ", 
+               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
+                                      " increases (on average) by ", 
+                                      " decreases (on average) by "), 
+               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2, 
+                                                      " units", " unit"), ".")
+      )
+    } else if (summary(lm1())$coefficients[1, 4] < 0.05 & 
+               summary(lm1())$coefficients[2, 4] >= 0.05) {
+      withMathJax(
+        paste0("*Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("For a (hypothetical) value of ", input$predictor, " = 0, 
+               the mean of ", input$response, " = ", round(lm1()$coef[[1]], 3), "."),
+        br(),
+        br(),
+        paste0("\\( \\beta_1 \\)", " is not significantly different from 0 (p-value = ", 
+               round(summary(lm1())$coefficients[2, 4], 3), ") so there is no significant 
+               relationship between ", input$predictor, " and ", input$response, ".")
+      )
+    } else if (summary(fit)$coefficients[1, 4] >= 0.05 & summary(fit)$coefficients[2, 4] < 0.05) {
+      withMathJax(
+        paste0("*Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("\\( \\beta_0 \\)", " is not significantly different from 0 (p-value = ", 
+               round(summary(lm1())$coefficients[1, 4], 3), ") so when ", input$predictor, 
+               " = 0, the mean of ", input$response, " is not significantly different from 0."),
+        br(),
+        br(),
+        paste0("For an increase of one unit of ", input$predictor, ", ", 
+               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
+                                      " increases (on average) by ", 
+                                      " decreases (on average) by "), 
+               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2,
+                                                      " units", " unit"), ".")
+      )
+    } else {
+      withMathJax(
+        paste0("*Make sure the assumptions for linear regression (independance, 
+               linearity, normality and homoscedasticity) are met before 
+               interpreting the coefficients."),
+        br(),
+        br(),
+        paste0("\\( \\beta_0 \\)", " and ", "\\( \\beta_1 \\)", " are not 
+               significantly different from 0 (p-values = ", 
+               round(summary(lm1())$coefficients[1, 4], 3), " and ", 
+               round(summary(lm1())$coefficients[2, 4], 3), 
+               ", respectively) so the mean of ", input$response, 
+               " is not significantly different from 0.")
+      )
+    }
+  })
   
 },
-options = list(height = 700)
+options = list(height = 1200)
 )
-
 ```
+
+Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app and the purpose of creating the interactivity is to allow users to make those conclusions and grapple with the implications themselves. However, we can look at the same relationship we examined on the linear graphs: fungicide application as a predictor for total deaths. From the output, we can see that the adjusted R-squared is quite low at 0.019, suggesting that the variance in total deaths explained by fungicides applied is very low. This makes sense as there are many factors interacting to explain death rate. However, what’s more striking is the strong correlation between the 2 variables, and a t-test for slope yields a p-value of 0. In looking back at the interactive map, we see that fungicide application is not evenly distributed throughout the US and is more in the west coast, parts of the mid-west, and Florida. Even within states, there are certain counties that have higher fungicide application, and one can look at the first map to determine whether those areas are national priority sites or not. This highlights the inequality and/ or different environmental considerations that exist when it comes to fungicide use in different geographic locations in the US. In knowing the strong relationship between fungicide application and total deaths, this has huge implications and leads to further questions such as what predisposes certain areas to higher fungicide application versus others?
+
+Ultimately, this is just one question resulting from one bivariate analysis, but there are many such questions and considerations that a user can explore using this application.
 
 
 ## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}

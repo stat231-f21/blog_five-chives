@@ -8,6 +8,7 @@ library(RColorBrewer)
 library(ggiraph)
 library(naniar)
 library(dplyr)
+library(plotly)
 
 # Import data on variables of interest
 county_data <- read_csv("interactive_state_app/county_data.csv")
@@ -17,14 +18,14 @@ linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matte
                            "vice_businesses", "education_businesses", "service_agencies", 
                            "healthcare_businesses", "commute_time", "fungicide", 
                            "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                           "gini_coefficient")
+                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
 linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
                           "Vice-Related Businesses", "Education-Related Businesses", 
                           "Service Agencies", "Healthcare-Related Businesses", 
                           "Commute Time", "Fungicides Applied", "Herbicides Applied",
                           "Insecticides Applied", "Percent Unemployed", 
                           "Percent in Poverty",
-                          "Income Inequality")
+                          "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
 
 # For label to distinguish variables by color
@@ -54,13 +55,13 @@ ui <- fluidPage(
                   selected = "total_deaths"),
       
       radioButtons(inputId = "pt_color",
-                   label = "Color line graph by:",
+                   label = "Line graphs are colored by:",
                    choices = linecolor_choice_values,
                    selected = NULL)
       
     ),
     
-    mainPanel(plotOutput(outputId = "linegraph"))
+    mainPanel(plotlyOutput(outputId = "linegraphcolor"))
     
   )
 )
@@ -71,24 +72,24 @@ ui <- fluidPage(
 ############
 server <- function(input, output) {
   
-  output$linegraph <- renderPlot({
-    ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
-                                          color = "superfund")) +
-      geom_smooth(methods = "loess") +
-      labs(x = linevar_choice_names[linevar_choice_values == input$index1],
-           y = linevar_choice_names[linevar_choice_values == input$index2],
-           title = paste("Interactive Line Graph of", 
-                         linevar_choice_names[linevar_choice_values == input$index2], 
-                         "by ",
-                         linevar_choice_names[linevar_choice_values == input$index1]),
-           subtitle = "Colored by National Priority Sites",
-           caption = "Data is collected from counties in the US. 
-           Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
-      theme(legend.position = "bottom",
-            plot.title.position = "plot",
-            panel.grid = element_line(FALSE),
-            panel.background = element_rect(fill = "black"))
+  output$linegraphcolor <- renderPlotly({
+   q <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
+                                              color = "superfund")) +
+          geom_smooth(methods = "loess") +
+          labs(x = linevar_choice_names[linevar_choice_values == input$index1],
+              y = linevar_choice_names[linevar_choice_values == input$index2],
+              title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
+                            "by",
+                            linevar_choice_names[linevar_choice_values == input$index1]),
+              caption = "Data is collected from counties in the US. 
+              Refer to EQI website for a dictionary on the variables.",
+              color = "National Priority Sites") +
+          theme(legend.position = "bottom",
+                plot.title.position = "plot",
+                panel.background = element_rect(fill = "black"))
+   
+   ggplotly(q) %>%
+     layout(legend = list(x = 0.1, y = 0.9))
   })
 }
 

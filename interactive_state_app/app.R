@@ -14,10 +14,11 @@ library(dplyr)
 library(geojsonio)
 library(maptools)
 library(tmap)
+library(plotly)
 
 # Import data on variables of interest as well as county geography
-county_data <- read_csv("county_data.csv")
-scatter_data <- read_csv("scatter_data.csv")
+county_data <- read_csv("interactive_state_app/county_data.csv")
+scatter_data <- read_csv("interactive_state_app/scatter_data.csv")
 
 # Create choices for states of interest
 statenames <- read_csv("states.csv") %>% 
@@ -83,7 +84,7 @@ ui <- fluidPage(
                      multiple = TRUE)
     ),
     
-    mainPanel(plotOutput(outputId = "mapvar"),
+    mainPanel(plotlyOutput(outputId = "mapvar"),
               splitLayout(cellwidths = c("50%", "50%"), 
                           plotOutput(outputId = "scatter",
                                      click = "plot_click",
@@ -126,11 +127,11 @@ server <- function(input, output) {
   
   # Create Interactive Map
   
-  output$mapvar <- renderPlot({
-    ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
-                                                       y = "lat", 
-                                                       group = "group", 
-                                                       fill = input$index)) +
+  output$mapvar <- renderPlotly({
+    m <-  ggplot(data = data_for_map(), mapping = aes_string(x = "long", 
+                                                             y = "lat", 
+                                                             group = "group", 
+                                                             fill = input$index)) +
       layer(data = data_for_map(), 
             geom = "polygon", stat = "identity", position = "identity") +
       geom_polygon(color = NA) +
@@ -141,10 +142,11 @@ server <- function(input, output) {
            y = "latitude",
            fill = var_choice_names[var_choice_values == input$index],
            title = paste(var_choice_names[var_choice_values == input$index], 
-                         "For Counties in the US"),
-           subtitle = paste("Gradient Map for ", input$state)) +
-      theme(panel.grid = element_line(FALSE),
-            panel.background = element_rect("black"))
+                         "For ",
+                         input$state)) +
+      theme(panel.background = element_rect("black"))
+    
+    ggplotly(m)
   })
   
   # Create data for scatter plot reacting to filters
