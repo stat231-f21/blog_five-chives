@@ -42,6 +42,8 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 ## Questions
 
 * Are sociodemographic determinants of mortality being acknowledged in the scientific research community?
+* Does geographic location of a county have an effect on the environmental and health statistics of a county?
+* Does a classification as a Superfund Site make a county more likely to have detrimental environmental or health effects?
 
 # Data
 
@@ -103,15 +105,21 @@ if(input$typevar != "Proportion of Coal Mines") {
 
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
 
-```{r hist-super, out.extra='style="border: none;"'}
+### Interactive density plot
+```{r data-gather, include = FALSE}
 total_df <- read_csv("final_data.csv")
 
 type_choice_names <- c("ln_hh_inc_x", "Total / (population / 100000)", "eqi_2jan2018_vc", "insecticide_ln_x", "gini_est_x", "std_coal_prim_pop_ln_y","hc_env_rate_ln_x")
 type_choice_values <- c("Median Income", "Mortality Rate", "EQI", "Insecticide Applied","Income Inequality", "Proportion of Coal Mines", "Healthcare-related Businesses")
-#notes_choice_values <- c("From CDC data, log-transformed", "From CDC data, per 100,000 persons",
-#                         "From EPA data, EQI (Environmental Quality Index), 2018 measurement")
 names(type_choice_names) <- type_choice_values
 
+super_data <- total_df %>%
+  filter(superfund == "TRUE")
+not_data <- total_df %>%
+  filter(is.na(superfund))
+```
+
+```{r density-super, out.extra='style="border: none;"'}
 shinyApp(
   ######
   #ui
@@ -126,24 +134,25 @@ shinyApp(
         selectInput(inputId = "typevar",
                     label = "Choose a variable of interest to plot:",
                     choices = type_choice_values,
-                    selected = "EQI")),
+                    selected = "Median Income")),
       mainPanel(plotOutput(outputId = "plot")))),
   
   server <- function(input, output, session) {
     
     output$plot <- renderPlot({
-      ggplot(data=total_df, aes_string(x = type_choice_names[type_choice_values == input$typevar])) + 
-          geom_histogram(bins = 20, aes(y = stat(width*density)),
-                         color = "darkblue", fill = "lightblue") +
-          facet_wrap(~superfund) +
-        labs(x = input$typevar,
-             y = "Percentage")
+      ggplot(total_df, aes(x = x)) + 
+        geom_density(data = super_data, aes_string(x = type_choice_names[type_choice_values == input$typevar], 
+                                                   y = "..density.."), fill="darkblue" ) +
+        geom_density(data = not_data, aes_string(x = type_choice_names[type_choice_values == input$typevar], 
+                                                 y = "-..density.."), fill = "lightblue") +
+        xlab(input$typevar) +
+        ylab("None Superfund vs. Superfund Sites")
     })
   }
 )
 ```
 
-These histograms were created to examine the difference between county environmental and health data for counties that are classified as having Superfund Sites by the EPA and those that are not. For this, I made sure to put the values in percentages rather than count since there are more non-Superfund-Site counties than not, which would skew the results. Some things we can see in these graphs are that the mortality rate for Superfund-Sites are more tightly clustered around their maximum, while non-Superfund-Sites have closer to a normal distribution. However, Superfund Sites appear to have a higher median income and amount of healthcare-related businesses, which may be because Superfund Sites tend to be clustered in highly populated and industrialized areas like cities.
+This density graph was created to examine the difference between county environmental and health data for counties that are classified as having Superfund Sites by the EPA and those that are not. For this, I made sure to put the use density rather than total count since there are more non-Superfund-Site counties than not, which would skew the results. Some things we can see in these graphs are that the mortality rate for Superfund-Sites are more tightly clustered around their maximum, while non-Superfund-Sites have closer to a normal distribution. However, Superfund Sites appear to have a higher median income and amount of healthcare-related businesses, which may be because Superfund Sites tend to be clustered in highly populated and industrialized areas like cities.
 
 ## Relationships by State
 
@@ -746,6 +755,8 @@ ed <- df %>%
 ```
 
 # Conclusion
+
+The map displaying county data shows that there are some geographic factors that influence the statistics of the counties' environmental and health. There are clear regional differences attributed to proportion of coal mining and amount of insecticide applied. In addition, we can spot a urban-rural divide in terms of higher income inequality in counties that have major cities and less healthcare-related businesses in rural areas. Surprisingly, there are actually only very subtle differences between counties that are classified as Superfund Sites versus those that are not. Part of this may be because superfund sites are clustered on the coasts and in heavily-populated areas, which overall have a higher income and more healthcare options.
 
 The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in connectedness of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
 
