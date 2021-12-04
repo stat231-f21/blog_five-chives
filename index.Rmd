@@ -462,7 +462,8 @@ Further than just looking at the distribution of variables of interest nationwid
 
 The interactive line graph allows users to view the relationship between 2 indexes of choice through a smooth curve. They also have the option to distinguish the data by color depending on whether counties are national priority sites. They can explore as many relationships as they choose. I used the `plotly` package to further allow users to hover over the line and view the value at a specific position on the plot. As opposed to the scatter plot in the shiny app above which has a fixed x-axis of median income, this app allows users all the flexibility. Here is the embedded Shiny app:
 
-```{r, out.width = "100%", out.extra = 'data-external="1" frameborder="no"'}
+```{r, out.width = "100%", out.height = "100%", out.extra = 'data-external="1" frameborder="no"'}
+#Embed Line Graph Shiny Application
 knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/line_graph/",
                    height = "500px")
 ```
@@ -498,183 +499,10 @@ In order to achieve this, I used the `MathJax` package in R in multiple ways. He
 
 Users are warned to check diagnostic conditions for linear models before drawing final conclusions. Because the primary purpose of the app is not to run statistical analyses on all the variables, that output is not provided for users. Ultimately, the purpose of the app is to fit simple linear models and allow users to see which variables are strongly correlated and explore what that might mean:
 
-```{r}
-# Create choices for variables of interest
-linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
-                           "vice_businesses", "education_businesses", "service_agencies", 
-                           "healthcare_businesses", "commute_time", "fungicide", 
-                           "herbicide", "insecticide", "pct_unemp_total", "pct_poverty", 
-                           "gini_coefficient", "ln_hh_inc_x", "eqi_2jan2018_vc")
-linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter", 
-                          "Vice-Related Businesses", "Education-Related Businesses", 
-                          "Service Agencies", "Healthcare-Related Businesses", 
-                          "Commute Time", "Fungicides Applied", "Herbicides Applied",
-                          "Insecticides Applied", "Percent Unemployed", 
-                          "Percent in Poverty",
-                          "Income Inequality", "Median Income", "EQI")
-names(linevar_choice_values) <- linevar_choice_names
-
-# For button to distinguish variables by color
-linecolor_choice_values <- c("superfund", "na")
-linecolor_choice_names <- c("National Priority Sites", "Not colored")
-names(linecolor_choice_values) <- linecolor_choice_names
-```
-
-```{r slr}
-shinyApp(
-  ############
-#    ui    #
-############
-ui <- fluidPage(
-  
-  titlePanel("Simple Linear Regression of 2 Variables of Interest"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      # Choose variable 1 of interest
-      selectInput(inputId = "predictor",
-                  label = "Choose predictor variable of choice (x-axis):",
-                  choices = linevar_choice_values,
-                  selected = "fungicide"),
-      
-      # Choose variable 2 of interest
-      selectInput(inputId = "response",
-                  label = "Choose response variable of choice (y-axis):",
-                  choices = linevar_choice_values,
-                  selected = "total_deaths")
-      
-    ),
-    
-    mainPanel(
-      tags$b("Compute parameters in R:"),
-      verbatimTextOutput("summary"),
-      br(),
-      br(),
-      tags$b("Regression plot:"),
-      uiOutput(outputId = "results"),
-      plotlyOutput(outputId = "regression"),
-      br(),
-      br(),
-      tags$b("Interpretation:"),
-      uiOutput(outputId = "interpretation")
-      )
-    
-  )
-),
-
-############
-# server   #
-############
-server <- function(input, output) {
-  
-  # Create reactive linear model formula
-  lm1 <- reactive({
-    lm(reformulate(input$predictor, input$response), data = county_data)
-    })
-  
-  # Create summary output of a simple linear regression
-  output$summary <- renderPrint({summary(lm1())})
-  
-  # Pull out and print results from SLR output
-  output$results <- renderUI({
-    withMathJax(
-      paste0(
-        "Adj. \\( R^2 = \\) ", round(summary(lm1())$adj.r.squared, 3),
-        ", \\( \\beta_0 = \\) ", round(lm1()$coef[[1]], 3),
-        ", \\( \\beta_1 = \\) ", round(lm1()$coef[[2]], 3),
-        ", P-value ", "\\( = \\) ", signif(summary(lm1())$coef[2, 4], 3)
-      )
-    )
-  })
-  
-  # Generate regression plot
-  output$regression <- renderPlotly({
-    r <- ggplot(county_data, aes_string(x = input$predictor, y = input$response)) +
-      stat_smooth(method = "lm", se = TRUE) +
-      ylab(linevar_choice_names[linevar_choice_values == input$response]) +
-      xlab(linevar_choice_names[linevar_choice_values == input$predictor]) +
-      theme_minimal()
-    
-    ggplotly(r)
-  }) 
-  
-  # Draw conclusions and print out interpretation
-  output$interpretation <- renderUI({
-    if (summary(lm1())$coefficients[1, 4] < 0.05 & 
-        summary(lm1())$coefficients[2, 4] < 0.05) {
-      withMathJax(
-        paste0("*Make sure the assumptions for linear regression (independance, 
-               linearity, normality and homoscedasticity) are met before 
-               interpreting the coefficients."),
-        br(),
-        br(),
-        paste0("For a (hypothetical) value of ", input$predictor, 
-               " = 0, the mean of ", input$response, " = ", 
-               round(lm1()$coef[[1]], 3), "."),
-        br(),
-        br(),
-        paste0("For an increase of one unit of ", input$predictor, ", ", 
-               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
-                                      " increases (on average) by ", 
-                                      " decreases (on average) by "), 
-               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2, 
-                                                      " units", " unit"), ".")
-      )
-    } else if (summary(lm1())$coefficients[1, 4] < 0.05 & 
-               summary(lm1())$coefficients[2, 4] >= 0.05) {
-      withMathJax(
-        paste0("*Make sure the assumptions for linear regression (independance, 
-               linearity, normality and homoscedasticity) are met before 
-               interpreting the coefficients."),
-        br(),
-        br(),
-        paste0("For a (hypothetical) value of ", input$predictor, " = 0, 
-               the mean of ", input$response, " = ", round(lm1()$coef[[1]], 3), "."),
-        br(),
-        br(),
-        paste0("\\( \\beta_1 \\)", " is not significantly different from 0 (p-value = ", 
-               round(summary(lm1())$coefficients[2, 4], 3), ") so there is no significant 
-               relationship between ", input$predictor, " and ", input$response, ".")
-      )
-    } else if (summary(fit)$coefficients[1, 4] >= 0.05 & summary(fit)$coefficients[2, 4] < 0.05) {
-      withMathJax(
-        paste0("*Make sure the assumptions for linear regression (independance, 
-               linearity, normality and homoscedasticity) are met before 
-               interpreting the coefficients."),
-        br(),
-        br(),
-        paste0("\\( \\beta_0 \\)", " is not significantly different from 0 (p-value = ", 
-               round(summary(lm1())$coefficients[1, 4], 3), ") so when ", input$predictor, 
-               " = 0, the mean of ", input$response, " is not significantly different from 0."),
-        br(),
-        br(),
-        paste0("For an increase of one unit of ", input$predictor, ", ", 
-               input$response, ifelse(round(lm1()$coef[[2]], 3) >= 0, 
-                                      " increases (on average) by ", 
-                                      " decreases (on average) by "), 
-               abs(round(lm1()$coef[[2]], 3)), ifelse(abs(round(lm1()$coef[[2]], 3)) >= 2,
-                                                      " units", " unit"), ".")
-      )
-    } else {
-      withMathJax(
-        paste0("*Make sure the assumptions for linear regression (independance, 
-               linearity, normality and homoscedasticity) are met before 
-               interpreting the coefficients."),
-        br(),
-        br(),
-        paste0("\\( \\beta_0 \\)", " and ", "\\( \\beta_1 \\)", " are not 
-               significantly different from 0 (p-values = ", 
-               round(summary(lm1())$coefficients[1, 4], 3), " and ", 
-               round(summary(lm1())$coefficients[2, 4], 3), 
-               ", respectively) so the mean of ", input$response, 
-               " is not significantly different from 0.")
-      )
-    }
-  })
-  
-},
-options = list(height = 1200)
-)
+```{r, out.width = "100%", out.height = "100%", out.extra = 'data-external="1" frameborder="no"'}
+#Embed SLR Shiny Application
+knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/SLR_app/",
+                   height = "500px")
 ```
 
 Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app and the purpose of creating the interactivity is to allow users to make those conclusions and grapple with the implications themselves. However, we can look at the same relationship we examined on the linear graphs: fungicide application as a predictor for total deaths. From the output, we can see that the adjusted R-squared is quite low at 0.019, suggesting that the variance in total deaths explained by fungicides applied is very low. This makes sense as there are many factors interacting to explain death rate. However, what’s more striking is the strong correlation between the 2 variables, and a t-test for slope yields a p-value of 0. In looking back at the interactive map, we see that fungicide application is not evenly distributed throughout the US and is more in the west coast, parts of the mid-west, and Florida. Even within states, there are certain counties that have higher fungicide application, and one can look at the first map to determine whether those areas are national priority sites or not. This highlights the inequality and/ or different environmental considerations that exist when it comes to fungicide use in different geographic locations in the US. In knowing the strong relationship between fungicide application and total deaths, this has huge implications and leads to further questions such as what predisposes certain areas to higher fungicide application versus others?
