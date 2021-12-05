@@ -7,7 +7,6 @@ output:
     thumbnails: false
     highlight: "kate"
     self_contained: false
-runtime: shiny
 ---
 
 ```{r setup, include = FALSE}
