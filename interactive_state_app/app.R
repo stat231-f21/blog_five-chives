@@ -1,24 +1,15 @@
 #Load necessary packages
 library(shiny)
-library(shinythemes)
 library(tidyverse)
-library(DT)
 library(urbnmapr)
 library(ggplot2)
 library(RColorBrewer)
-library(ggiraph)
-library(naniar)
-library(sf)
-library(leaflet)
-library(dplyr)
-library(geojsonio)
-library(maptools)
-library(tmap)
 library(plotly)
+library(dplyr)
 
 # Import data on variables of interest as well as county geography
-county_data <- read_csv("interactive_state_app/county_data.csv")
-scatter_data <- read_csv("interactive_state_app/scatter_data.csv")
+county_data <- read_csv("county_data.csv")
+scatter_data <- read_csv("scatter_data.csv")
 
 # Create choices for states of interest
 statenames <- read_csv("states.csv") %>% 
@@ -62,7 +53,7 @@ ui <- fluidPage(
       selectInput(inputId = "index",
                   label = "Choose environmental index of choice:",
                   choices = var_choice_values,
-                  selected = "pct_poverty"),
+                  selected = "fungicide"),
       
       # Choose states of interest to display
       selectInput(inputId = "state",
@@ -71,10 +62,10 @@ ui <- fluidPage(
                   selected = "Texas"),
       
       # Choose to color points by presence of a super fund site or not
-      checkboxGroupInput(inputId = "pt_color",
-                         label = "Color scatter plot points by:",
-                         choices = color_choice_values,
-                         selected = "superfund"),
+      radioButtons(inputId = "pt_color",
+                   label = "Scatter plot is colored by:",
+                   choices = color_choice_values,
+                   selected = NULL),
       
       # Choose to view counties of interest in selected states
       selectizeInput(inputId = "county_name",
@@ -147,6 +138,7 @@ server <- function(input, output) {
       theme(panel.background = element_rect("black"))
     
     ggplotly(m)
+    
   })
   
   # Create data for scatter plot reacting to filters
