@@ -1,19 +1,9 @@
 #Load necessary packages
 library(shiny)
-library(shinythemes)
 library(tidyverse)
-library(DT)
 library(urbnmapr)
 library(ggplot2)
 library(RColorBrewer)
-library(ggiraph)
-library(naniar)
-library(sf)
-library(leaflet)
-library(dplyr)
-library(geojsonio)
-library(maptools)
-library(tmap)
 library(plotly)
 
 # Import data on variables of interest as well as county geography
