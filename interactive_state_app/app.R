@@ -5,6 +5,7 @@ library(urbnmapr)
 library(ggplot2)
 library(RColorBrewer)
 library(plotly)
+library(dplyr)
 
 # Import data on variables of interest as well as county geography
 county_data <- read_csv("county_data.csv")
