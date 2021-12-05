@@ -115,6 +115,8 @@ if(input$typevar != "Proportion of Coal Mines") {
     }
 ```
 
+For the map, users are able to explore seven different variables: Median Income (CDC, log-transformed), Mortality Rate (CDC, per 100,000 persons), Environmental Quality Index (EPA,  2018 measurement), Insecticide Applied (PCA EPA, in pounds, log-transformed), Income Inequality (PCA EPA, in proportion), Proportion of Coal Mines (PCA EPA, Mines per county population, log-transformed), Healthcare-related Businesses (PCA EPA, log-transformed rate). There is also an option to be able to see which counties have Superfund Sites (EPA).
+
 ```{r map1-visualization, out.extra='style="border: none;"', fig.cap = "Leaflet Map Visualization with Superfund Sites"}
 # embed shiny app once published
  knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "650px")
@@ -123,52 +125,9 @@ if(input$typevar != "Proportion of Coal Mines") {
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
 
 ### Interactive density plot
-```{r data-gather, include = FALSE}
-total_df <- read_csv("final_data.csv")
 
-type_choice_names <- c("ln_hh_inc_x", "Total / (population / 100000)", "eqi_2jan2018_vc", "insecticide_ln_x", "gini_est_x", "std_coal_prim_pop_ln_y","hc_env_rate_ln_x")
-type_choice_values <- c("Median Income", "Mortality Rate", "EQI", "Insecticide Applied","Income Inequality", "Proportion of Coal Mines", "Healthcare-related Businesses")
-names(type_choice_names) <- type_choice_values
-
-super_data <- total_df %>%
-  filter(superfund == "TRUE")
-not_data <- total_df %>%
-  filter(is.na(superfund))
-```
-
-```{r density-super}
-shinyApp(
-  ######
-  #ui
-  ######
-  
-  ui <- fluidPage(
-    
-    titlePanel("Examining the Effects of Superfund Sites"),
-    
-    sidebarLayout(
-      sidebarPanel(
-        selectInput(inputId = "typevar",
-                    label = "Choose a variable of interest to plot:",
-                    choices = type_choice_values,
-                    selected = "Median Income")),
-      mainPanel(plotOutput(outputId = "plot")))),
-  
-  server <- function(input, output, session) {
-    
-    output$plot <- renderPlot({
-      ggplot(total_df, aes(x = x)) + 
-        geom_density(data = super_data, aes_string(x = type_choice_names[type_choice_values == input$typevar], 
-                                                   y = "..density.."), fill="darkblue" ) +
-        geom_density(data = not_data, aes_string(x = type_choice_names[type_choice_values == input$typevar], 
-                                                 y = "-..density.."), fill = "lightblue") +
-        xlab(input$typevar) +
-        ylab("None Superfund vs. Superfund Sites")
-    })
-  },
-  
-  options = list(height = 500)
-)
+```{r data-gather, out.extra='style="border: none;"', fig.cap = "Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites"}
+ knitr::include_app("https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530", height = "500px")
 ```
 
 This density graph was created to examine the difference between county environmental and health data for counties that are classified as having Superfund Sites by the EPA and those that are not. For this, I made sure to put the use density rather than total count since there are more non-Superfund-Site counties than not, which would skew the results. Some things we can see in these graphs are that the mortality rate for Superfund-Sites are more tightly clustered around their maximum, while non-Superfund-Sites have closer to a normal distribution. However, Superfund Sites appear to have a higher median income and amount of healthcare-related businesses, which may be because Superfund Sites tend to be clustered in highly populated and industrialized areas like cities.
