@@ -210,7 +210,7 @@ Here is the embedded shiny app. The entire US is currently selected, but users h
 ```{r, out.width = "100%", out.height = "100%", out.extra = 'data-external="1" frameborder="no"'}
 #Embed State Shiny Application
 knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/interactive_state_app/",
-                   height = "500px")
+                   height = "1000px")
 ```
 
 It’s visible that there is inequality and different environmental considerations throughout the United States. In looking at a map of the entire country or zooming in to a specific state, it’s visible that the value of the variables vary and there are areas that report higher or lower values for specific indices. For example, there are disproportionately more coal mines in mountainous areas and higher insecticide use in rural areas. Additionally, there is a visible rural-urban divide with regard to income level and income equality. 
@@ -265,7 +265,7 @@ Users are warned to check diagnostic conditions for linear models before drawing
 ```{r, out.width = "100%", out.height = "100%", out.extra = 'data-external="1" frameborder="no"'}
 #Embed SLR Shiny Application
 knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/SLR_app/",
-                   height = "500px")
+                   height = "1200px")
 ```
 
 Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app and the purpose of creating the interactivity is to allow users to make those conclusions and grapple with the implications themselves. However, we can look at the same relationship we examined on the linear graphs: fungicide application as a predictor for total deaths. From the output, we can see that the adjusted R-squared is quite low at 0.019, suggesting that the variance in total deaths explained by fungicides applied is very low. This makes sense as there are many factors interacting to explain death rate. However, what’s more striking is the strong correlation between the 2 variables, and a t-test for slope yields a p-value of 0. In looking back at the interactive map, we see that fungicide application is not evenly distributed throughout the US and is more in the west coast, parts of the mid-west, and Florida. Even within states, there are certain counties that have higher fungicide application, and one can look at the first map to determine whether those areas are national priority sites or not. This highlights the inequality and/ or different environmental considerations that exist when it comes to fungicide use in different geographic locations in the US. In knowing the strong relationship between fungicide application and total deaths, this has huge implications and leads to further questions such as what predisposes certain areas to higher fungicide application versus others?
