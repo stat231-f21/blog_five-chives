@@ -11,7 +11,7 @@ library(dplyr)
 library(plotly)
 
 # Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data.csv")
+county_data <- read_csv("county_data.csv")
 
 # Create choices for variables of interest
 linevar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
@@ -28,12 +28,17 @@ linevar_choice_names <- c("Total Deaths", "Carbon Monoxide", "Particulate Matter
                           "Income Inequality", "Median Income", "EQI")
 names(linevar_choice_values) <- linevar_choice_names
 
+# For button to distinguish variables by color
+linecolor_choice_values <- c("superfund", "na")
+linecolor_choice_names <- c("National Priority Sites", "Not colored")
+names(linecolor_choice_values) <- linecolor_choice_names
+
 ############
 #    ui    #
 ############
 ui <- fluidPage(
   
-  titlePanel("Line Graphs of Variables of Interest"),
+  titlePanel("Line Graphs of Variables Colored by National Priority Sites"),
   
   sidebarLayout(
     sidebarPanel(
@@ -47,11 +52,16 @@ ui <- fluidPage(
       selectInput(inputId = "index2",
                   label = "Choose index 2 of choice (y-axis):",
                   choices = linevar_choice_values,
-                  selected = "total_deaths")
+                  selected = "total_deaths"),
+      
+      radioButtons(inputId = "pt_color",
+                   label = "Color line graphs by:",
+                   choices = linecolor_choice_values,
+                   selected = NULL)
       
     ),
     
-    mainPanel(plotlyOutput(outputId = "linegraph"))
+    mainPanel(plotlyOutput(outputId = "linegraphcolor"))
     
   )
 )
@@ -62,25 +72,30 @@ ui <- fluidPage(
 ############
 server <- function(input, output) {
   
-  output$linegraph <- renderPlotly({
-    
-    p <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2)) +
+  
+  
+  output$linegraphcolor <- renderPlotly({
+    q <- ggplot(data = county_data, aes_string(x = input$index1, y = input$index2, 
+                                               color = ifelse(
+                                                 input$pt_color == "superfund", 
+                                                 "superfund", FALSE)))+
       geom_smooth(methods = "loess") +
       labs(x = linevar_choice_names[linevar_choice_values == input$index1],
            y = linevar_choice_names[linevar_choice_values == input$index2],
            title = paste(linevar_choice_names[linevar_choice_values == input$index2], 
                          "by",
                          linevar_choice_names[linevar_choice_values == input$index1]),
-           caption = "Data is collected from counties in the US.
-              Refer to EQI website for a dictionary on the variables.") +
+           caption = "Data is collected from counties in the US. 
+              Refer to EQI website for a dictionary on the variables.",
+           color = "National Priority Sites") +
       theme(legend.position = "bottom",
             plot.title.position = "plot",
             panel.background = element_rect(fill = "black"))
     
-    ggplotly(p)
+    ggplotly(q) %>%
+      layout(legend = list(x = 0.1, y = 0.9))
+    
   })
-  
-  
 }
 
 

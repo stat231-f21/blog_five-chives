@@ -9,14 +9,14 @@ library(shiny)
 library(dplyr)
 
 #read in list of abstracts
-#abstract_words <- read_csv("data/abstract_words.csv") 
+abstract_words <- read_csv("abstract_words.csv") 
 
 #set seed and theme
 set.seed(83426)
 theme_set(theme_classic())
 
 ######
-#data wrangling
+#add categories
 ######
 
 
@@ -168,7 +168,8 @@ server <- function(input, output) {
            caption = paste("Words not found: ", interest_missing(), 
                            "\n Data source: PubMed")) 
 
-  })
+  }, 
+  width = 600, height = 400)
   
   output$plot_info <- renderText({
     abst_stat <- data.frame(name = vertex_attr(abst_igraph(), "name"),

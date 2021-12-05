@@ -14,9 +14,10 @@ library(rmarkdown)
 library(knitr)
 library(pander)
 library(mathjaxr)
+library(sjPlot)
 
 # Import data on variables of interest
-county_data <- read_csv("interactive_state_app/county_data.csv") 
+county_data <- read_csv("county_data.csv") 
 
 # Create choices for variables of interest
 slrvar_choice_values <- c("total_deaths", "carbon_monoxide", "particulate_matter", 
@@ -68,7 +69,7 @@ ui <- fluidPage(
       br(),
       tags$b("Interpretation:"),
       uiOutput(outputId = "interpretation")
-      )
+    )
     
   )
 )
@@ -81,8 +82,8 @@ server <- function(input, output) {
   
   # Create reactive linear model formula
   lm1 <- reactive({
-    lm(reformulate(input$predictor, input$response), data = county_data)
-    })
+      lm(reformulate(input$predictor, input$response), data = county_data)
+  })
   
   # Create summary output of a simple linear regression
   output$summary <- renderPrint({summary(lm1())})
@@ -115,7 +116,7 @@ server <- function(input, output) {
     if (summary(lm1())$coefficients[1, 4] < 0.05 & 
         summary(lm1())$coefficients[2, 4] < 0.05) {
       withMathJax(
-        paste0("Make sure the assumptions for linear regression (independance, 
+        paste0("*Make sure the assumptions for linear regression (independance, 
                linearity, normality and homoscedasticity) are met before 
                interpreting the coefficients."),
         br(),
@@ -135,7 +136,7 @@ server <- function(input, output) {
     } else if (summary(lm1())$coefficients[1, 4] < 0.05 & 
                summary(lm1())$coefficients[2, 4] >= 0.05) {
       withMathJax(
-        paste0("Make sure the assumptions for linear regression (independance, 
+        paste0("*Make sure the assumptions for linear regression (independance, 
                linearity, normality and homoscedasticity) are met before 
                interpreting the coefficients."),
         br(),
@@ -150,7 +151,7 @@ server <- function(input, output) {
       )
     } else if (summary(fit)$coefficients[1, 4] >= 0.05 & summary(fit)$coefficients[2, 4] < 0.05) {
       withMathJax(
-        paste0("Make sure the assumptions for linear regression (independance, 
+        paste0("*Make sure the assumptions for linear regression (independance, 
                linearity, normality and homoscedasticity) are met before 
                interpreting the coefficients."),
         br(),
@@ -169,7 +170,7 @@ server <- function(input, output) {
       )
     } else {
       withMathJax(
-        paste0("Make sure the assumptions for linear regression (independance, 
+        paste0("*Make sure the assumptions for linear regression (independance, 
                linearity, normality and homoscedasticity) are met before 
                interpreting the coefficients."),
         br(),
@@ -185,7 +186,6 @@ server <- function(input, output) {
   })
   
 }
-
 
 
 ####################
