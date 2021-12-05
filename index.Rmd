@@ -11,20 +11,17 @@ output:
 
 ```{r setup, include = FALSE}
 # Load necessary packages
+library(tidyverse) 
+library(kableExtra) #used for regression output
 library(tidyverse)
-library(kableExtra) 
-library(tidyverse)
-library(tidytext)
-library(textdata)
-library(ggnetwork)
-library(igraph)
 library(shiny)
 library(dplyr)
+
 library(plotly)
 library(shinythemes)
 library(DT)
 library(urbnmapr)
-library(ggplot2)
+library(ggplot2) #used for linear plot 
 library(RColorBrewer)
 library(ggiraph)
 library(naniar)
