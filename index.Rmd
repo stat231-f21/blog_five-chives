@@ -16,22 +16,12 @@ library(kableExtra) #used for regression output
 library(tidyverse)
 library(shiny)
 library(dplyr)
-
 library(plotly)
 library(shinythemes)
 library(DT)
-library(urbnmapr)
 library(ggplot2) #used for linear plot 
 library(RColorBrewer)
 library(ggiraph)
-library(naniar)
-library(sf)
-library(leaflet)
-library(geojsonio)
-library(maptools)
-library(tmap)
-library(pander)
-library(mathjaxr)
 
 # Set code chunk defaults 
 knitr::opts_chunk$set(echo = FALSE, 
