@@ -51,13 +51,11 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 # Data
 
-In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority in regards to their pollution level, from Wikipedia on 10/2/21. 
+In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority due to their pollution level, from Wikipedia on 10/2/21. 
 
-In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words).
+In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we specified these words to be either in the title or the abstract. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words). 
 
 # Results
-
-<!-- could be interesting to start this section off with a simple but summative scatterplot (doesn't even have to be interactive) that shows overall relationship between mortality (response variable) and predictors of interest, including EQI, income, etc. (choose these based off of which factors are highlighted in our maps) -->
 
 ## Interactive map
 
@@ -250,7 +248,9 @@ There is a statistically significant negative linear relationship between mortal
 
 In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.
 
-### Code
+### Code and methods
+
+We unnested individual words from research abstracts and retained only words of interest. Then, we computed counts for each word in each year. 
 
 The below code demonstrates how we used the `gganimate`, which builds off of the `ggplot2` package, and `gifski` packages to create an animated bar chart of top words used in abstracts over time. We used the `gganimate` package to create an animated object from `barchart`, which was a static barchart of top words that we created using `ggplot2`. We used the `gifski` package to render a gif from out animation. 
 
@@ -283,7 +283,9 @@ animate(anim, #object to create gif
 
 In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, "social" supersedes even the word "mortality" in its centrality. By 2021, we see the words "disparities" and "racial" enter the top 5 central words in abstracts. 
 
-### Code
+### Code and methods
+
+We were interested in whether two word were included in the same research abstract. We did not give extra weight to connections that occured multiple times in the same research abstract. Thus, when computing data for our network, we only considered whether or not a connection shows up at least one time in each research abstract. The weights for our edges thus reflect the number of abstracts that contain two individual words. 
 
 To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
 
@@ -325,4 +327,12 @@ A limitation of this project is that we did not have data nor analyses to look c
 Our findings on the focus of research over time is promising. The rise in the consideration of social factors and their connection to mortality shows increased acknowledgement of the inequality of mortality risks. However, the gap between research and policy is often wide and difficult to bridge. Progressive findings in scientific abstracts, while representative of the inclusion of social thought into clinical work, are not an accurate measure of whether tangible change is being generated from these conclusions. Through lobbying, corporations have a much larger influence in restricting the passage of policies that may reduce their profits than in research (though the influence on scientific research is still present, through funding sources). To assess whether policy makers are putting forth legislation that addresses the root socio demographic causes of unequal mortality risk, and whether that inequality is even acknowledged in the first place, we would like to  extend our project in the future by analyzing legislation that is proposed/passed in regards to environmental toxicity and mortality. This can allow us to understand whether there is a lag between research and legislation and to explore how the government is addressing health inequalities. 
 
 # References
+
+[EPA data (downloaded 9/28/21)](https://edg.epa.gov/EPADataCommons/public/ORD/CPHEA/EQI_2006_2010/)
+
+[CDC data (downloaded 9/28/21)](https://wonder.cdc.gov/controller/datarequest/D76)
+
+[Superfund site locations (scraped 10/2/21)](https://en.wikipedia.org/wiki/List_of_Superfund_sites)
+
+[PubMed search results (scraped 10/29/21)](https://pubmed.ncbi.nlm.nih.gov/?term=%28%28%28mortality%5BTitle%2FAbstract%5D%29+AND+%28causes%5BTitle%2FAbstract%5D%29%29+OR+%28determinants%5BTitle%2FAbstract%5D%29%29+AND+%28united+states%29&sort=&filter=simsearch1.fha&filter=pubt.journalarticle&filter=hum_ani.humans&filter=lang.english&filter=simsearch1.fha&filter=pubt.journalarticle&filter=hum_ani.humans&filter=lang.english)
 
