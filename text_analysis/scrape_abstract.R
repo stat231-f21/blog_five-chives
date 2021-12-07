@@ -14,20 +14,10 @@ citations <- set1 %>%
   rbind(set2, set3, set4) %>% 
   janitor::clean_names() %>% 
   arrange(desc(publication_year)) %>% 
-  mutate(url = NA)
-
-#define number of citations
-n_cit <- nrow(citations)
-
-#create urls for each citation
-for (x in 1:n_cit) {
-  string <- toString(citations[x, 1])
-  citations[x, 12] <- paste0("https://pubmed.ncbi.nlm.nih.gov/", string, "/")
-}
-
-#create empty column for abstracts
-citations <- citations %>% 
-  mutate(abstract = NA)
+  #create columns for url's, abstracts, convert unique id to string
+  mutate(url = NA, string = toString(PMID), abstract = NA) %>% 
+  #populate dataframe with urls
+  mutate(url = paste0("https://pubmed.ncbi.nlm.nih.gov/", string, "/"))
 
 #populate dataframe with abstracts
 #NOTE: code takes a LONG time to run
@@ -37,7 +27,9 @@ for (x in 1:37076) {
     html_elements("#enc-abstract > p") %>% 
     html_text()
   paragraph <- paste(parag, collapse = "")
-  citations$abstract[x] <- paragraph
+  #i decided to use base r because (from my research) it is slightly faster than mutate
+  #when iterating through so many instances of the for loop, base r might be very slightly advantageous
+  citations$abstract[x] <- paragraph 
 }
 
 # #check to make sure all citations have associated abstract
