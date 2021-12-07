@@ -19,7 +19,7 @@ theme_set(theme_classic())
 #add categories
 ######
 
-
+#create list of words to keep
 empty <- data.frame(word = character())
 keep_words <- empty %>%
   add_row(word = c("mortality", "disease", "age", "cancer", "women", "population", "hiv", "social",
@@ -38,11 +38,12 @@ keep_words <- empty %>%
                    "sexual", "depression", "behavioral", "influenza", "economic", "genome",
                    "urban", "ethnicity"))
 
+#create smaller set of words to use in default network
 interest_words <- empty %>%
   add_row(word = c("mortality", "social", "disparities", "cancer", "community",
                    "genetic", "environmental", "family",
-                   "racial", "demographic", "economic", "exposure")) %>% 
-  mutate(category = NA)
+                   "racial", "demographic", "economic", "exposure")) 
+#used base R, mutate function was running into errors
 interest_words$category[interest_words$word %in% c("mortality", "cancer")] <- "mortality"
 interest_words$category[interest_words$word %in% c("social", "disparities", "racial", "demographic", 
                                     "economic")] <- "sociodemographic"
@@ -60,11 +61,6 @@ interest_words$category[interest_words$word %in% c("environmental", "exposure")]
 #             word %in% c("genetic") ~ "genetic", 
 #             word %in% c("environmental", "exposure"), ~ "exposure", 
 #             TRUE ~ NA))
-
-######
-#define widgets
-######
-
 
 ######
 #ui
