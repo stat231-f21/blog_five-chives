@@ -244,7 +244,7 @@ There is a statistically significant negative linear relationship between mortal
 
 ### Animated bar chart
 
-![](data/gganim2.gif)
+![](img/gganim2.gif)
 
 In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.
 
