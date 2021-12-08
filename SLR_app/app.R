@@ -103,6 +103,7 @@ server <- function(input, output) {
   # Generate regression plot
   output$regression <- renderPlotly({
     r <- ggplot(county_data, aes_string(x = input$predictor, y = input$response)) +
+      geom_point(alpha = 0.5) +
       stat_smooth(method = "lm", se = TRUE) +
       ylab(slrvar_choice_names[slrvar_choice_values == input$response]) +
       xlab(slrvar_choice_names[slrvar_choice_values == input$predictor]) +
