@@ -173,6 +173,7 @@ server <- function(input, output) {
                          "By Median Income"),
            subtitle = paste("For ", input$state),
            caption = "Colored by National Priority Sites.
+                      NA refers to sites that are not superfund.
                       Data is collected from counties in the US. 
                       Refer to EQI website for a dictionary on the variables.",
            color = color_choice_names[color_choice_values]) +
