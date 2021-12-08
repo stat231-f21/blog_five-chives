@@ -5,9 +5,9 @@ account: ql0crk-dasha-asienga
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5271606
-bundleId: 5330704
+bundleId: 5346208
 url: https://ql0crk-dasha-asienga.shinyapps.io/interactive_state_app/
-when: 1638737244.7415
-lastSyncTime: 1638737244.74151
+when: 1638981844.02789
+lastSyncTime: 1638981844.0279
 asMultiple: FALSE
 asStatic: FALSE
