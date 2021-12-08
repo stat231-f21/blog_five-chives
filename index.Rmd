@@ -57,7 +57,9 @@ In order to analyze research pertaining to mortality causes, we scraped abstract
 
 # Results
 
-## Interactive map
+## Relationship by County and Superfund Sites
+
+### Interactive Leaflet Map
 
 The below code shows an example of how I used the `geojsonio` package to join our data on factors such as insecticides, income, etc. in order to utilize this data in `SpatialPolygons` for our `leaflet` choropleth map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable "deaths" to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our variables I wanted to add into the polygons data.
 
@@ -104,7 +106,7 @@ For the map, users are able to explore seven different variables: Median Income 
 
 ```{r map1-visualization, out.extra='style="border: none;"', fig.cap = "Leaflet Map Visualization with Superfund Sites"}
 # embed shiny app once published
- knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "650px")
+ knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "725px")
 ```
 
 [Click here](https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530) for separate link to Shiny app.
@@ -114,7 +116,7 @@ In the map above, one can locate their county, or any county of interest, and fi
 ### Interactive density plot
 
 ```{r data-gather, out.extra='style="border: none;"', fig.cap = "Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites"}
- knitr::include_app("https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530", height = "500px")
+ knitr::include_app("https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530", height = "540px")
 ```
 
 [Click here](https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530) for separate link to Shiny app.
