@@ -30,7 +30,7 @@ names(linevar_choice_values) <- linevar_choice_names
 
 # For button to distinguish variables by color
 linecolor_choice_values <- c("superfund", "na")
-linecolor_choice_names <- c("National Priority Sites", "Not colored")
+linecolor_choice_names <- c("National Priority Sites", "Don't differentiate points")
 names(linecolor_choice_values) <- linecolor_choice_names
 
 ############
@@ -38,7 +38,7 @@ names(linecolor_choice_values) <- linecolor_choice_names
 ############
 ui <- fluidPage(
   
-  titlePanel("Line Graphs of Variables Colored by National Priority Sites"),
+  titlePanel("Associations of Different Variables Differentiated by National Priority Sites"),
   
   sidebarLayout(
     sidebarPanel(
@@ -87,15 +87,21 @@ server <- function(input, output) {
                          linevar_choice_names[linevar_choice_values == input$index1]),
            caption = "Data is collected from counties in the US. 
               Refer to EQI website for a dictionary on the variables.",
-           color = "National Priority Sites") +
+           color = linecolor_choice_names[linecolor_choice_values == input$pt_color]) +
       theme(legend.position = "bottom",
             plot.title.position = "plot",
             panel.background = element_rect(fill = "black"))
     
     ggplotly(q) %>%
-      layout(legend = list(x = 0.1, y = 0.9))
+      layout(legend = list(x = 0.1, y = 0.9),
+             annotations = 
+               list(x = 0.52, y = 0.6, text = "*NA refers to sites that are not superfund", 
+                                showarrow = F, xref='paper', yref='paper', 
+                                xanchor='right', yanchor='auto', xshift=0, yshift=0,
+                                font=list(size=12, color="grey")))
     
-  })
+  }
+  )
 }
 
 
@@ -103,7 +109,7 @@ server <- function(input, output) {
 ####################
 # call to Shiny App #
 ####################
-shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server, options = list(height = 400, width = 600))
 
 
 

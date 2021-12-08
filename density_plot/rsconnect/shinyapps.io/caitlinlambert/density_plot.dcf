@@ -5,9 +5,9 @@ account: caitlinlambert
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5256684
-bundleId: 5321583
+bundleId: 5346686
 url: https://caitlinlambert.shinyapps.io/density_plot/
-when: 1638491117.82685
-lastSyncTime: 1638491117.82685
+when: 1638989266.40246
+lastSyncTime: 1638989266.40246
 asMultiple: FALSE
 asStatic: FALSE

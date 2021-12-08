@@ -64,5 +64,5 @@ anim <- ggplot(abstract_count, aes(rank, group = word,
 
 #create gif
 animate(anim, 500, fps = 20,  width = 900, height = 750, 
-        renderer = gifski_renderer("data/gganim2.gif"), end_pause = 15, start_pause =  15) 
+        renderer = gifski_renderer("img/gganim2.gif"), end_pause = 15, start_pause =  15) 
 

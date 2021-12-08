@@ -10,44 +10,41 @@
     
     <title>Environmental and Sociodemographic Determinants of Mortality in the US</title>
 
-        <script src="index_files/header-attrs-2.10/header-attrs.js"></script>
         <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="index_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="index_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-        <script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-        <script src="index_files/navigation-1.1/tabsets.js"></script>
-        <link href="index_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
-        <script src="index_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
-        <link href="index_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
-        <link href="index_files/readthedown-0.1/readthedown_fonts_embed.css" rel="stylesheet" />
-        <script src="index_files/readthedown-0.1/readthedown.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="index_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="index_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+    <script src="index_files/navigation-1.1/tabsets.js"></script>
+    <link href="index_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+    <script src="index_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+    <link href="index_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
+    <link href="index_files/readthedown-0.1/readthedown_fonts_embed.css" rel="stylesheet" />
+    <script src="index_files/readthedown-0.1/readthedown.js"></script>
     
     
         <style type="text/css">code{white-space: pre;}</style>
     <style type="text/css">
-      pre > code.sourceCode { white-space: pre; position: relative; }
-      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-      pre > code.sourceCode > span:empty { height: 1.2em; }
+      a.sourceLine { display: inline-block; line-height: 1.25; }
+      a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+      a.sourceLine:empty { height: 1.2em; }
       .sourceCode { overflow: visible; }
-      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      code.sourceCode { white-space: pre; position: relative; }
       div.sourceCode { margin: 1em 0; }
       pre.sourceCode { margin: 0; }
       @media screen {
       div.sourceCode { overflow: auto; }
       }
       @media print {
-      pre > code.sourceCode { white-space: pre-wrap; }
-      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      code.sourceCode { white-space: pre-wrap; }
+      a.sourceLine { text-indent: -1em; padding-left: 1em; }
       }
-      pre.numberSource code
-        { counter-reset: source-line 0; }
-      pre.numberSource code > span
-        { position: relative; left: -4em; counter-increment: source-line; }
-      pre.numberSource code > span > a:first-child::before
-        { content: counter(source-line);
+      pre.numberSource a.sourceLine
+        { position: relative; left: -4em; }
+      pre.numberSource a.sourceLine::before
+        { content: attr(data-line-number);
           position: relative; left: -1em; text-align: right; vertical-align: baseline;
-          border: none; display: inline-block;
+          border: none; pointer-events: all; display: inline-block;
           -webkit-touch-callout: none; -webkit-user-select: none;
           -khtml-user-select: none; -moz-user-select: none;
           -ms-user-select: none; user-select: none;
@@ -59,9 +56,9 @@
       div.sourceCode
         { color: #1f1c1b; background-color: #ffffff; }
       @media screen {
-      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      a.sourceLine::before { text-decoration: underline; }
       }
-      code span { color: #1f1c1b; } /* Normal */
+      code span. { color: #1f1c1b; } /* Normal */
       code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
       code span.an { color: #ca60ca; } /* Annotation */
       code span.at { color: #0057ae; } /* Attribute */
@@ -177,8 +174,7 @@
 
 <body class="preload">
 
-   	
-         <!-- readthedown start -->   
+            <!-- readthedown start -->   
    <div id="content" data-toggle="wy-nav-shift">
      <nav id="nav-top" role="navigation" aria-label="top navigation">
        <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
@@ -193,22 +189,19 @@
     <h2><a href="#content">Environmental and Sociodemographic Determinants of Mortality in the US</a></h2>
     <div id="toc">
       <ul>
-      <li><a href="#introduction">Introduction</a>
-      <ul>
+      <li><a href="#introduction">Introduction</a><ul>
       <li><a href="#questions">Questions</a></li>
       </ul></li>
       <li><a href="#data">Data</a></li>
-      <li><a href="#results">Results</a>
-      <ul>
+      <li><a href="#results">Results</a><ul>
       <li><a href="#interactive-map">Interactive map</a></li>
       <li><a href="#relationships-by-state">Relationships by State</a></li>
       <li><a href="#inter-variable-relationships">Inter-Variable Relationships</a></li>
-      <li><a href="#mortality-rate-vs.-income">Mortality rate vs. Income</a></li>
+      <li><a href="#mortality-rate-vs.income">Mortality rate vs. Income</a></li>
       <li><a href="#word-counts-in-research-abstracts">Word counts in research abstracts</a></li>
       <li><a href="#word-networks-in-research-abstracts">Word networks in research abstracts</a></li>
       </ul></li>
-      <li><a href="#conclusion">Conclusion</a>
-      <ul>
+      <li><a href="#conclusion">Conclusion</a><ul>
       <li><a href="#limitations-and-future-directions">Limitations and Future Directions</a></li>
       </ul></li>
       <li><a href="#references">References</a></li>
@@ -219,15 +212,14 @@
                         <p class="date"><span class="glyphicon glyphicon-calendar"></span> Last edited 12/02/21</p>
           </div>
    </div>
-     
-
+   
    
       
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div id="main">
 <div class="figure">
-<img src="img/header.jpg" alt="" />
+<img src="img/header.jpg" alt="Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments. (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in “Cancer Alley”, Louisiana, 2014" />
 <p class="caption">Percy G. Montgomery’s mother, Lee Ester Hunt, holds her medication and pills for various cancer treatments. (Lee Ester passed away in 2016 - two years after this photograph). Image taken by Giles Clarke in “Cancer Alley”, Louisiana, 2014</p>
 </div>
 <div id="introduction" class="section level1">
@@ -248,47 +240,46 @@
 </div>
 <div id="data" class="section level1">
 <h1>Data</h1>
-<p>In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority in regards to their pollution level, from Wikipedia on 10/2/21.</p>
-<p>In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included “mortality” AND “cause” OR “determinant”, and we limited results to only the United States. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like “the”, “results”, or “mortality” which would not provide interesting information, see word options in the network visualization for the full list of retained words).</p>
+<p>In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority due to their pollution level, from Wikipedia on 10/2/21.</p>
+<p>In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included “mortality” AND “cause” OR “determinant”, and we specified these words to be either in the title or the abstract. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like “the”, “results”, or “mortality” which would not provide interesting information, see word options in the network visualization for the full list of retained words).</p>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
-<!-- could be interesting to start this section off with a simple but summative scatterplot (doesn't even have to be interactive) that shows overall relationship between mortality (response variable) and predictors of interest, including EQI, income, etc. (choose these based off of which factors are highlighted in our maps) -->
 <div id="interactive-map" class="section level2">
 <h2>Interactive map</h2>
 <p>The below code shows an example of how I used the <code>geojsonio</code> package to join our data on factors such as insecticides, income, etc. in order to utilize this data in <code>SpatialPolygons</code> for our <code>leaflet</code> choropleth map. This required transforming the data within the polygons into a dataframe and joining it with the data from our past csv files, and then transforming it back into polygons. In this example, I am simply adding on another variable “deaths” to the data portion of the Spatial Polygons and then merge that dataframe back into the polygons for use in the map. This was necessary to do for all of our variables I wanted to add into the polygons data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show polygon data</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geojsonio)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>counties_all <span class="ot">&lt;-</span> geojsonio<span class="sc">::</span><span class="fu">geojson_read</span>(<span class="st">&quot;leaflet_map_1/counties_map.geojson&quot;</span>, <span class="at">what =</span> <span class="st">&quot;sp&quot;</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>counties_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(counties_all)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>counties_df <span class="ot">&lt;-</span> counties_df <span class="sc">%&gt;%</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">deaths =</span> (Total <span class="sc">/</span> (population <span class="sc">/</span> <span class="dv">100000</span>)))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(counties_df) <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">slot</span>(counties_all, <span class="st">&quot;polygons&quot;</span>), </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                 <span class="cf">function</span>(x) <span class="fu">slot</span>(x, <span class="st">&quot;ID&quot;</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>counties_all <span class="ot">&lt;-</span> <span class="fu">SpatialPolygonsDataFrame</span>(counties_all, counties_df)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(counties_all)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># show polygon data</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(geojsonio)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">counties_all &lt;-<span class="st"> </span>geojsonio<span class="op">::</span><span class="kw">geojson_read</span>(<span class="st">&quot;leaflet_map_1/counties_map.geojson&quot;</span>, <span class="dt">what =</span> <span class="st">&quot;sp&quot;</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">counties_df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(counties_all)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">counties_df &lt;-<span class="st"> </span>counties_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">deaths =</span> (Total <span class="op">/</span><span class="st"> </span>(population <span class="op">/</span><span class="st"> </span><span class="dv">100000</span>)))</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">row.names</span>(counties_df) &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">slot</span>(counties_all, <span class="st">&quot;polygons&quot;</span>), </a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">                                 <span class="cf">function</span>(x) <span class="kw">slot</span>(x, <span class="st">&quot;ID&quot;</span>))</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">counties_all &lt;-<span class="st"> </span><span class="kw">SpatialPolygonsDataFrame</span>(counties_all, counties_df)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">names</span>(counties_all)</a></code></pre></div>
 <p>Creating a choropleth map within leaflet and Shiny was fairly difficult, and in order to correctly create the colors for every variable in every county, I had to use colorQuantile for palettes and create <code>pal_colors</code> and <code>pal_labs</code> in order to accurately make a legend that did not just include the percentages. Different bins had to be made for the coal mining data since it did not have enough unique quantiles.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># code to understand color interactivity</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>counties_all<span class="sc">@</span>data<span class="sc">$</span>selected <span class="ot">&lt;-</span> counties_all<span class="sc">@</span>data[, <span class="fu">paste</span>(type_choice_names[type_choice_values <span class="sc">==</span> input<span class="sc">$</span>typevar])]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(input<span class="sc">$</span>typevar <span class="sc">!=</span> <span class="st">&quot;Proportion of Coal Mines&quot;</span>) {</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      palette <span class="ot">&lt;-</span> <span class="fu">colorQuantile</span>(<span class="st">&quot;RdYlGn&quot;</span>, <span class="at">domain =</span> counties_all<span class="sc">@</span>data<span class="sc">$</span>selected, <span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      counties_all<span class="sc">@</span>data<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">palette</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      pal_colors <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">palette</span>(<span class="fu">sort</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected)))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      pal_labs <span class="ot">&lt;-</span> <span class="fu">quantile</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, .<span class="dv">1</span>), <span class="at">na.rm =</span> T)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      pal_labs <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">lag</span>(pal_labs), <span class="at">digits =</span> <span class="dv">3</span>), <span class="fu">round</span>(pal_labs, <span class="at">digits =</span> <span class="dv">3</span>), <span class="at">sep =</span> <span class="st">&quot; - &quot;</span>)[<span class="sc">-</span><span class="dv">1</span>] </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(input<span class="sc">$</span>typevar <span class="sc">==</span> <span class="st">&quot;Proportion of Coal Mines&quot;</span>) {</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      palette <span class="ot">&lt;-</span> <span class="fu">colorBin</span>(<span class="st">&quot;YlOrRd&quot;</span>, <span class="at">domain =</span> counties_all<span class="sc">@</span>data<span class="sc">$</span>selected, <span class="dv">2</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      counties_all<span class="sc">@</span>data<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">palette</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      pal_colors <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">palette</span>(<span class="fu">sort</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected)))</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      pal_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fu">unique</span>(<span class="fu">quantile</span>(counties_all<span class="sc">@</span>data<span class="sc">$</span>selected, <span class="at">na.rm =</span> T)), <span class="cn">Inf</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      pal_labs <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">lag</span>(pal_labs), <span class="at">digits =</span> <span class="dv">3</span>), <span class="fu">round</span>(pal_labs, <span class="at">digits =</span> <span class="dv">3</span>), <span class="at">sep =</span> <span class="st">&quot; - &quot;</span>)[<span class="sc">-</span><span class="dv">1</span>] </span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># code to understand color interactivity</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">counties_all<span class="op">@</span>data<span class="op">$</span>selected &lt;-<span class="st"> </span>counties_all<span class="op">@</span>data[, <span class="kw">paste</span>(type_choice_names[type_choice_values <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>typevar])]</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    </a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="cf">if</span>(input<span class="op">$</span>typevar <span class="op">!=</span><span class="st"> &quot;Proportion of Coal Mines&quot;</span>) {</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">      palette &lt;-<span class="st"> </span><span class="kw">colorQuantile</span>(<span class="st">&quot;RdYlGn&quot;</span>, <span class="dt">domain =</span> counties_all<span class="op">@</span>data<span class="op">$</span>selected, <span class="dt">n =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">      counties_all<span class="op">@</span>data<span class="op">$</span>color &lt;-<span class="st"> </span><span class="kw">palette</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">      </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">      pal_colors &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">palette</span>(<span class="kw">sort</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected)))</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">      pal_labs &lt;-<span class="st"> </span><span class="kw">quantile</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected, <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">.1</span>), <span class="dt">na.rm =</span> T)</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">      pal_labs &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">round</span>(<span class="kw">lag</span>(pal_labs), <span class="dt">digits =</span> <span class="dv">3</span>), <span class="kw">round</span>(pal_labs, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>)[<span class="op">-</span><span class="dv">1</span>] </a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    }</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">    <span class="cf">if</span>(input<span class="op">$</span>typevar <span class="op">==</span><span class="st"> &quot;Proportion of Coal Mines&quot;</span>) {</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">      palette &lt;-<span class="st"> </span><span class="kw">colorBin</span>(<span class="st">&quot;YlOrRd&quot;</span>, <span class="dt">domain =</span> counties_all<span class="op">@</span>data<span class="op">$</span>selected, <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">      counties_all<span class="op">@</span>data<span class="op">$</span>color &lt;-<span class="st"> </span><span class="kw">palette</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected)</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">      pal_colors &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">palette</span>(<span class="kw">sort</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected)))</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">      pal_labs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="ot">Inf</span>, <span class="kw">unique</span>(<span class="kw">quantile</span>(counties_all<span class="op">@</span>data<span class="op">$</span>selected, <span class="dt">na.rm =</span> T)), <span class="ot">Inf</span>)</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">      pal_labs &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">round</span>(<span class="kw">lag</span>(pal_labs), <span class="dt">digits =</span> <span class="dv">3</span>), <span class="kw">round</span>(pal_labs, <span class="dt">digits =</span> <span class="dv">3</span>), <span class="dt">sep =</span> <span class="st">&quot; - &quot;</span>)[<span class="op">-</span><span class="dv">1</span>] </a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    }</a></code></pre></div>
 <p>For the map, users are able to explore seven different variables: Median Income (CDC, log-transformed), Mortality Rate (CDC, per 100,000 persons), Environmental Quality Index (EPA, 2018 measurement), Insecticide Applied (PCA EPA, in pounds, log-transformed), Income Inequality (PCA EPA, in proportion), Proportion of Coal Mines (PCA EPA, Mines per county population, log-transformed), Healthcare-related Businesses (PCA EPA, log-transformed rate). There is also an option to be able to see which counties have Superfund Sites (EPA).</p>
 <div class="figure" style="text-align: center">
 <iframe src="https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530" width="768" height="650px" style="border: none;">
@@ -314,25 +305,25 @@ Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites
 <h2>Relationships by State</h2>
 <p>For the second visualization, we were interested in looking at a different choropleth map that shows indices of our variables of interests not only nationwide, but also statewide. For this visualization, we were interested in giving users the choice to explore these relationships closer at the state level, and a person can even zoom into the choropleth map above and view both visualizations side by side. In order to aid this, users are able to view a scatter plot and a density plot of their variable of interest for all the counties in their state of interest. This can help highlight inequalities within their state and users are further able to view their counties of interest on the scatter plots and examine them relative to others in the state.</p>
 <p>The click-hover-brush feature allows users to see values of a specific county in the scatter plot and a specific position on the plot of the density plot. Here is the code that I used to allow users to look closer at counties or points selected on the scatter plot. They can select counties of interest from the selectize input function.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Created Function for Hover/ Click Interactivity </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>scatter_info <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    xy_str <span class="ot">&lt;-</span> <span class="cf">function</span>(e) {</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">is.null</span>(e)) <span class="fu">return</span>(<span class="st">&quot;NULL</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">&quot;x=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>x, <span class="dv">1</span>), <span class="st">&quot; y=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>y, <span class="dv">1</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    xy_range_str <span class="ot">&lt;-</span> <span class="cf">function</span>(e) {</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">is.null</span>(e)) <span class="fu">return</span>(<span class="st">&quot;NULL</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">&quot;xmin=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>xmin, <span class="dv">1</span>), <span class="st">&quot; xmax=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>xmax, <span class="dv">1</span>), </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;ymin=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>ymin, <span class="dv">1</span>), <span class="st">&quot; ymax=&quot;</span>, <span class="fu">round</span>(e<span class="sc">$</span>ymax, <span class="dv">1</span>))</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;click: &quot;</span>, <span class="fu">xy_str</span>(input<span class="sc">$</span>plot_click),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;dblclick: &quot;</span>, <span class="fu">xy_str</span>(input<span class="sc">$</span>plot_dblclick),</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;hover: &quot;</span>, <span class="fu">xy_str</span>(input<span class="sc">$</span>plot_hover),</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;brush: &quot;</span>, <span class="fu">xy_range_str</span>(input<span class="sc">$</span>plot_brush)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  })</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Created Function for Hover/ Click Interactivity </span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  output<span class="op">$</span>scatter_info &lt;-<span class="st"> </span><span class="kw">renderText</span>({</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    xy_str &lt;-<span class="st"> </span><span class="cf">function</span>(e) {</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">      <span class="cf">if</span>(<span class="kw">is.null</span>(e)) <span class="kw">return</span>(<span class="st">&quot;NULL</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">      <span class="kw">paste0</span>(<span class="st">&quot;x=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>x, <span class="dv">1</span>), <span class="st">&quot; y=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>y, <span class="dv">1</span>), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    }</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    xy_range_str &lt;-<span class="st"> </span><span class="cf">function</span>(e) {</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">      <span class="cf">if</span>(<span class="kw">is.null</span>(e)) <span class="kw">return</span>(<span class="st">&quot;NULL</span><span class="ch">\n</span><span class="st">&quot;</span>)</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">      <span class="kw">paste0</span>(<span class="st">&quot;xmin=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>xmin, <span class="dv">1</span>), <span class="st">&quot; xmax=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>xmax, <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">             <span class="st">&quot;ymin=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>ymin, <span class="dv">1</span>), <span class="st">&quot; ymax=&quot;</span>, <span class="kw">round</span>(e<span class="op">$</span>ymax, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">    }</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">    <span class="kw">paste0</span>(</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">      <span class="st">&quot;click: &quot;</span>, <span class="kw">xy_str</span>(input<span class="op">$</span>plot_click),</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">      <span class="st">&quot;dblclick: &quot;</span>, <span class="kw">xy_str</span>(input<span class="op">$</span>plot_dblclick),</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">      <span class="st">&quot;hover: &quot;</span>, <span class="kw">xy_str</span>(input<span class="op">$</span>plot_hover),</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">      <span class="st">&quot;brush: &quot;</span>, <span class="kw">xy_range_str</span>(input<span class="op">$</span>plot_brush)</a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">    )</a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">  })</a></code></pre></div>
 <p>I used a similar function for the density plot and used the <code>plotly</code> package to enable hover interactivity for the map.</p>
 <p>Here is the embedded shiny app. The entire US is currently selected, but users have the choice to view a specific state. Click on the map to view values of the index of choice for each county.</p>
 <div id="interactive-map-and-associated-plots" class="section level3">
@@ -356,22 +347,22 @@ Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites
 <div id="interactive-simple-linear-regression" class="section level3">
 <h3>Interactive Simple Linear Regression</h3>
 <p>Lastly, to further allow users to explore bivariate relationships in much further depth, I created a Shiny application that runs a linear regression model on any 2 variables of interest. The application reactively takes in any 2 variables of interest, fits a simple linear regression model, produces the summary output and a linear model plot, pulls out important statistical values such as the adjusted r-squared and the p-value, and then interprets the results on behalf of the user. The reactive linear model function that I used is as follows:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create reactive linear model formula</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  lm1 <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lm</span>(<span class="fu">reformulate</span>(input<span class="sc">$</span>predictor, input<span class="sc">$</span>response), <span class="at">data =</span> county_data)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    })</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Create reactive linear model formula</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  lm1 &lt;-<span class="st"> </span><span class="kw">reactive</span>({</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="kw">lm</span>(<span class="kw">reformulate</span>(input<span class="op">$</span>predictor, input<span class="op">$</span>response), <span class="dt">data =</span> county_data)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">    })</a></code></pre></div>
 <p>In order to achieve this, I used the <code>MathJax</code> package in R in multiple ways. Here is an example of how I used the package to pull out important statistical results:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a> <span class="co"># Pull out and print results from SLR output</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>results <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">withMathJax</span>(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Adj. </span><span class="sc">\\</span><span class="st">( R^2 = </span><span class="sc">\\</span><span class="st">) &quot;</span>, <span class="fu">round</span>(<span class="fu">summary</span>(<span class="fu">lm1</span>())<span class="sc">$</span>adj.r.squared, <span class="dv">3</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;, </span><span class="sc">\\</span><span class="st">( </span><span class="sc">\\</span><span class="st">beta_0 = </span><span class="sc">\\</span><span class="st">) &quot;</span>, <span class="fu">round</span>(<span class="fu">lm1</span>()<span class="sc">$</span>coef[[<span class="dv">1</span>]], <span class="dv">3</span>),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;, </span><span class="sc">\\</span><span class="st">( </span><span class="sc">\\</span><span class="st">beta_1 = </span><span class="sc">\\</span><span class="st">) &quot;</span>, <span class="fu">round</span>(<span class="fu">lm1</span>()<span class="sc">$</span>coef[[<span class="dv">2</span>]], <span class="dv">3</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;, P-value &quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">( = </span><span class="sc">\\</span><span class="st">) &quot;</span>, <span class="fu">signif</span>(<span class="fu">summary</span>(<span class="fu">lm1</span>())<span class="sc">$</span>coef[<span class="dv">2</span>, <span class="dv">4</span>], <span class="dv">3</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  })</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"> <span class="co"># Pull out and print results from SLR output</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">  output<span class="op">$</span>results &lt;-<span class="st"> </span><span class="kw">renderUI</span>({</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="kw">withMathJax</span>(</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">      <span class="kw">paste0</span>(</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">        <span class="st">&quot;Adj. </span><span class="ch">\\</span><span class="st">( R^2 = </span><span class="ch">\\</span><span class="st">) &quot;</span>, <span class="kw">round</span>(<span class="kw">summary</span>(<span class="kw">lm1</span>())<span class="op">$</span>adj.r.squared, <span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">        <span class="st">&quot;, </span><span class="ch">\\</span><span class="st">( </span><span class="ch">\\</span><span class="st">beta_0 = </span><span class="ch">\\</span><span class="st">) &quot;</span>, <span class="kw">round</span>(<span class="kw">lm1</span>()<span class="op">$</span>coef[[<span class="dv">1</span>]], <span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">        <span class="st">&quot;, </span><span class="ch">\\</span><span class="st">( </span><span class="ch">\\</span><span class="st">beta_1 = </span><span class="ch">\\</span><span class="st">) &quot;</span>, <span class="kw">round</span>(<span class="kw">lm1</span>()<span class="op">$</span>coef[[<span class="dv">2</span>]], <span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">        <span class="st">&quot;, P-value &quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">( = </span><span class="ch">\\</span><span class="st">) &quot;</span>, <span class="kw">signif</span>(<span class="kw">summary</span>(<span class="kw">lm1</span>())<span class="op">$</span>coef[<span class="dv">2</span>, <span class="dv">4</span>], <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">      )</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">    )</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  })</a></code></pre></div>
 <p>Users are warned to check diagnostic conditions for linear models before drawing final conclusions. Because the primary purpose of the app is not to run statistical analyses on all the variables, that output is not provided for users. Ultimately, the purpose of the app is to fit simple linear models and allow users to see which variables are strongly correlated and explore what that might mean:</p>
 <iframe src="https://ql0crk-dasha-asienga.shinyapps.io/SLR_app/?showcase=0" width="100%" height="1200px" data-external="1" frameborder="no">
 </iframe>
@@ -379,7 +370,7 @@ Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites
 <p>Ultimately, this is just one question resulting from one bivariate analysis, but there are many such questions and considerations that a user can explore using this application.</p>
 </div>
 </div>
-<div id="mortality-rate-vs.-income" class="section level2">
+<div id="mortality-rate-vs.income" class="section level2">
 <h2>Mortality rate vs. Income</h2>
 <img src="index_files/figure-html/death-income-1.png" width="576" style="display: block; margin: auto;" />
 <table style="border-collapse:collapse; border:none;">
@@ -453,63 +444,65 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 <p>There is a statistically significant negative linear relationship between mortality rate and median income in counties in the US from 2006-2010.</p>
 </div>
 <div id="word-counts-in-research-abstracts" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Word counts in research abstracts</h2>
+<h2>Word counts in research abstracts</h2>
 <div id="animated-bar-chart" class="section level3">
 <h3>Animated bar chart</h3>
-<p><img src="data/gganim2.gif" /></p>
+<p><img src="img/gganim2.gif" /></p>
 <p>In the above animation, the top 10 words up until 2011 do not contain the word “social”. In 2011, though, “social” enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.</p>
 </div>
-<div id="code" class="section level3">
-<h3>Code</h3>
+<div id="code-and-methods" class="section level3">
+<h3>Code and methods</h3>
+<p>We unnested individual words from research abstracts and retained only words of interest. Then, we computed counts for each word in each year.</p>
 <p>The below code demonstrates how we used the <code>gganimate</code>, which builds off of the <code>ggplot2</code> package, and <code>gifski</code> packages to create an animated bar chart of top words used in abstracts over time. We used the <code>gganimate</code> package to create an animated object from <code>barchart</code>, which was a static barchart of top words that we created using <code>ggplot2</code>. We used the <code>gifski</code> package to render a gif from out animation.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create animated object from ggplot barchart</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>anim <span class="ot">&lt;-</span> barchart <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#transition by publication_year</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_states</span>(publication_year, </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">transition_length =</span> <span class="dv">8</span>, <span class="at">state_length =</span> <span class="dv">4</span>, <span class="at">wrap =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">view_follow</span>(<span class="at">fixed_x =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="co">#x scale should be animated and modified by the view</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ease_aes</span>(<span class="st">&#39;sine-in-out&#39;</span>) <span class="sc">+</span> <span class="co">#smooth out animations</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#create gif</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">animate</span>(anim, <span class="co">#object to create gif</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="dv">500</span>, <span class="co">#sets length in seconds</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">fps =</span> <span class="dv">20</span>, <span class="co">#defines frames per second</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">width =</span> <span class="dv">900</span>, <span class="at">height =</span> <span class="dv">750</span>, <span class="co">#sets dimensions</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">renderer =</span> <span class="fu">gifski_renderer</span>(<span class="st">&quot;data/gganim2.gif&quot;</span>), <span class="co">#renders and saves gif</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_pause =</span> <span class="dv">15</span>, <span class="at">start_pause =</span>  <span class="dv">15</span> <span class="co">#length of pauses between repeats) </span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">#create animated object from ggplot barchart</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">anim &lt;-<span class="st"> </span>barchart <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">  </span><span class="co">#transition by publication_year</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">  </span><span class="kw">transition_states</span>(publication_year, </a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">                    <span class="dt">transition_length =</span> <span class="dv">8</span>, <span class="dt">state_length =</span> <span class="dv">4</span>, <span class="dt">wrap =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">  </span><span class="kw">view_follow</span>(<span class="dt">fixed_x =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span><span class="co">#x scale should be animated and modified by the view</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="st">  </span><span class="kw">ease_aes</span>(<span class="st">&#39;sine-in-out&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="co">#smooth out animations</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#create gif</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="kw">animate</span>(anim, <span class="co">#object to create gif</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">        <span class="dv">500</span>, <span class="co">#sets length in seconds</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">        <span class="dt">fps =</span> <span class="dv">20</span>, <span class="co">#defines frames per second</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">        <span class="dt">width =</span> <span class="dv">900</span>, <span class="dt">height =</span> <span class="dv">750</span>, <span class="co">#sets dimensions</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">        <span class="dt">renderer =</span> <span class="kw">gifski_renderer</span>(<span class="st">&quot;data/gganim2.gif&quot;</span>), <span class="co">#renders and saves gif</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">        <span class="dt">end_pause =</span> <span class="dv">15</span>, <span class="dt">start_pause =</span>  <span class="dv">15</span> <span class="co">#length of pauses between repeats) </span></a></code></pre></div>
 </div>
 </div>
 <div id="word-networks-in-research-abstracts" class="section level2 tabset tabset-fade tabset-pills">
-<h2 class="tabset tabset-fade tabset-pills">Word networks in research abstracts</h2>
+<h2>Word networks in research abstracts</h2>
 <div id="interactive-network" class="section level3">
 <h3>Interactive network</h3>
 <iframe src="https://eyzhang24.shinyapps.io/text_analysis/?showcase=0" width="100%" height="650px" data-external="1" frameborder="no">
 </iframe>
 <p>In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, “social” supersedes even the word “mortality” in its centrality. By 2021, we see the words “disparities” and “racial” enter the top 5 central words in abstracts.</p>
 </div>
-<div id="code-1" class="section level3">
-<h3>Code</h3>
+<div id="code-and-methods-1" class="section level3">
+<h3>Code and methods</h3>
+<p>We were interested in whether two word were included in the same research abstract. We did not give extra weight to connections that occured multiple times in the same research abstract. Thus, when computing data for our network, we only considered whether or not a connection shows up at least one time in each research abstract. The weights for our edges thus reflect the number of abstracts that contain two individual words.</p>
 <p>To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from <code>abstract_words</code>, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create dataframe with co-occurence matrix</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> abstract_words <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#keeps only year of interest based off of input from user in Shiny</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(publication_year <span class="sc">==</span> input<span class="sc">$</span>year_b) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(network_words, <span class="at">by =</span> <span class="st">&quot;word&quot;</span>) <span class="sc">%&gt;%</span> <span class="co">#only keeps interest words</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="co">#remove repeats of connections in same abstract</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(pmid, word) <span class="sc">%&gt;%</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crossprod</span>() <span class="co">#creates co-occurence matrix of connections </span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(df) <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#sets connections between same word to 0</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(df)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#define edges from co-occurence matrix</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>ed <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">from =</span> <span class="fu">rownames</span>(.)) <span class="sc">%&gt;%</span> <span class="co">#create &quot;from&quot; column from row names </span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#gathers co-occurences from matrix,</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create &quot;to&quot; column from column names, </span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create &quot;weight&quot; column from number of co-occurences</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">gather</span>(to, weight, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(df)) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weight =</span> <span class="fu">ifelse</span>(weight <span class="sc">==</span> <span class="dv">0</span>, <span class="cn">NA</span>, weight)) <span class="co">#weights of 0 to NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">#create dataframe with co-occurence matrix</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">df &lt;-<span class="st"> </span>abstract_words <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="co">#keeps only year of interest based off of input from user in Shiny</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(publication_year <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>year_b) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="st">  </span><span class="kw">right_join</span>(network_words, <span class="dt">by =</span> <span class="st">&quot;word&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#only keeps interest words</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="st">  </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#remove repeats of connections in same abstract</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(pmid, word) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="st">  </span><span class="kw">table</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="st">  </span><span class="kw">crossprod</span>() <span class="co">#creates co-occurence matrix of connections </span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">diag</span>(df) &lt;-<span class="st"> </span><span class="dv">0</span> <span class="co">#sets connections between same word to 0</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(df)</a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">#define edges from co-occurence matrix</span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14">ed &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">from =</span> <span class="kw">rownames</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co">#create &quot;from&quot; column from row names </span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="st">  </span><span class="co">#gathers co-occurences from matrix,</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="st">    </span><span class="co">#create &quot;to&quot; column from column names, </span></a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="st">    </span><span class="co">#create &quot;weight&quot; column from number of co-occurences</span></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(to, weight, <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(df)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-20" data-line-number="20"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">weight =</span> <span class="kw">ifelse</span>(weight <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">NA</span>, weight)) <span class="co">#weights of 0 to NA</span></a></code></pre></div>
 </div>
 </div>
 </div>
@@ -526,6 +519,10 @@ R<sup>2</sup> / R<sup>2</sup> adjusted
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
+<p><a href="https://edg.epa.gov/EPADataCommons/public/ORD/CPHEA/EQI_2006_2010/">EPA data (downloaded 9/28/21)</a></p>
+<p><a href="https://wonder.cdc.gov/controller/datarequest/D76">CDC data (downloaded 9/28/21)</a></p>
+<p><a href="https://en.wikipedia.org/wiki/List_of_Superfund_sites">Superfund site locations (scraped 10/2/21)</a></p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/?term=%28%28%28mortality%5BTitle%2FAbstract%5D%29+AND+%28causes%5BTitle%2FAbstract%5D%29%29+OR+%28determinants%5BTitle%2FAbstract%5D%29%29+AND+%28united+states%29&amp;sort=&amp;filter=simsearch1.fha&amp;filter=pubt.journalarticle&amp;filter=hum_ani.humans&amp;filter=lang.english&amp;filter=simsearch1.fha&amp;filter=pubt.journalarticle&amp;filter=hum_ani.humans&amp;filter=lang.english">PubMed search results (scraped 10/29/21)</a></p>
 </div>
 </div>
 
