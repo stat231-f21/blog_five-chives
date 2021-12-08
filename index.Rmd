@@ -107,6 +107,8 @@ For the map, users are able to explore seven different variables: Median Income 
  knitr::include_app("https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530", height = "650px")
 ```
 
+[Click here](https://caitlinlambert.shinyapps.io/leaflet_map_1/?_ga=2.43026016.474256613.1637255347-542459212.1632238530) for separate link to Shiny app.
+
 In the map above, one can locate their county, or any county of interest, and find how that geographical location corresponds to the variables of EQI, median income, mortality rates, insecticide usage, income inequality, percentage of coal mines, and healthcare-related businesses. Some common trends are that there is more income-inequality in urban areas. There are less healthcare-related businesses in rural areas, and more insecticide use in middle America. Coal mining centers around the Appalachian and Rocky Mountains. Superfund sites are actually scattered well across the country, but are more clustered around coastal areas.
 
 ### Interactive density plot
@@ -114,6 +116,8 @@ In the map above, one can locate their county, or any county of interest, and fi
 ```{r data-gather, out.extra='style="border: none;"', fig.cap = "Density Map: Light Blue for Non-Superfund, Dark Blue for Superfund Sites"}
  knitr::include_app("https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530", height = "500px")
 ```
+
+[Click here](https://caitlinlambert.shinyapps.io/density_plot/?_ga=2.38362147.1631051593.1638490448-542459212.1632238530) for separate link to Shiny app.
 
 This density graph was created to examine the difference between county environmental and health data for counties that are classified as having Superfund Sites by the EPA and those that are not. For this, I made sure to put the use density rather than total count since there are more non-Superfund-Site counties than not, which would skew the results. Some things we can see in these graphs are that the mortality rate for Superfund-Sites are more tightly clustered around their maximum, while non-Superfund-Sites have closer to a normal distribution. However, Superfund Sites appear to have a higher median income and amount of healthcare-related businesses, which may be because Superfund Sites tend to be clustered in highly populated and industrialized areas like cities.
 
@@ -157,6 +161,8 @@ knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/interactive_state_
                    height = "1000px")
 ```
 
+[Click here](https://ql0crk-dasha-asienga.shinyapps.io/interactive_state_app/) for separate link to Shiny app.
+
 It’s visible that there is inequality and different environmental considerations throughout the United States. In looking at a map of the entire country or zooming in to a specific state, it’s visible that the value of the variables vary and there are areas that report higher or lower values for specific indices. For example, there are disproportionately more coal mines in mountainous areas and higher insecticide use in rural areas. Additionally, there is a visible rural-urban divide with regard to income level and income equality. 
 
 Ultimately, it’s hard to quantify all the results that we can obtain from this visualization -- each state is different and there are many factors that may account for these differences. Essentially, the purpose of this visualization is to give a user the power to explore the data used to create this application and use that to inform their individual questions and draw their conclusions.
@@ -174,6 +180,8 @@ The interactive line graph allows users to view the relationship between 2 index
 knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/line_graph/",
                    height = "500px")
 ```
+
+[Click here](https://ql0crk-dasha-asienga.shinyapps.io/line_graph/) for separate link to Shiny app.
 
 Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app. We can look at one conclusion in-depth. At the moment, fungicide application and total deaths is selected and it’s interesting to see how the total number of deaths appears to increase as the amount of fungicides applied. The total number of deaths seem to increase much faster depending on the amount of fungicide applied for counties that are national priority sites. The entire line graph is also higher for these counties. This suggests that there may be many other factors at play at the sites, given that they are flagged as having higher toxicological levels, that may work together to exacerbate the effects of fungicide applied on total deaths and make populations in these counties more vulnerable. 
 
@@ -211,6 +219,8 @@ Users are warned to check diagnostic conditions for linear models before drawing
 knitr::include_app("https://ql0crk-dasha-asienga.shinyapps.io/SLR_app/",
                    height = "1200px")
 ```
+
+[Click here](https://ql0crk-dasha-asienga.shinyapps.io/SLR_app/) for separate link to Shiny app.
 
 Just like in the previous Shiny app, there are many insights that can be drawn from interacting with the app and the purpose of creating the interactivity is to allow users to make those conclusions and grapple with the implications themselves. However, we can look at the same relationship we examined on the linear graphs: fungicide application as a predictor for total deaths. From the output, we can see that the adjusted R-squared is quite low at 0.019, suggesting that the variance in total deaths explained by fungicides applied is very low. This makes sense as there are many factors interacting to explain death rate. However, what’s more striking is the strong correlation between the 2 variables, and a t-test for slope yields a p-value of 0. In looking back at the interactive map, we see that fungicide application is not evenly distributed throughout the US and is more in the west coast, parts of the mid-west, and Florida. Even within states, there are certain counties that have higher fungicide application, and one can look at the first map to determine whether those areas are national priority sites or not. This highlights the inequality and/ or different environmental considerations that exist when it comes to fungicide use in different geographic locations in the US. In knowing the strong relationship between fungicide application and total deaths, this has huge implications and leads to further questions such as what predisposes certain areas to higher fungicide application versus others?
 
@@ -256,6 +266,8 @@ animate(anim, #object to create gif
 # embed shiny app once published
  knitr::include_app("https://eyzhang24.shinyapps.io/text_analysis/", height = "650px")
 ```
+
+[Click here](https://eyzhang24.shinyapps.io/text_analysis/) for separate link to Shiny app.
 
 In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, "social" supersedes even the word "mortality" in its centrality. By 2021, we see the words "disparities" and "racial" enter the top 5 central words in abstracts. This shows both the rise in consideration of sociodemographic factors and, promisingly, the accompanying acknowledgement of their unequal distribution and the role that race and ethnicity play. 
 
