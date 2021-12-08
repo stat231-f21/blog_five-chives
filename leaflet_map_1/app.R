@@ -31,15 +31,14 @@ counties_all <- SpatialPolygonsDataFrame(counties_all, counties_df)
 # Inputs
 type_choice_names <- c("ln_hh_inc_x", "deaths", "eqi_2jan2018_vc", "insecticide_ln_x", "gini_est_x", "std_coal_prim_pop_ln_y","hc_env_rate_ln_x")
 type_choice_values <- c("Median Income", "Mortality Rate", "EQI", "Insecticide Applied","Income Inequality", "Proportion of Coal Mines", "Healthcare-related Businesses")
-#notes_choice_values <- c("From CDC data, log-transformed", "From CDC data, per 100,000 persons",
-#                         "From EPA data, EQI (Environmental Quality Index), 2018 measurement")
+notes_choice_values <- c("From CDC data, log-transformed", "From CDC data, per 100,000 persons",
+                         "From EPA data, EQI (Environmental Quality Index), 2018 measurement", 
+                         "From PCA EPA data, Insecticide applied in pounds, log-transformed",
+                         "From PCA EPA data, Measurement of income inequality in proportion",
+                         "From PCA EPA data, Mines per county population, log-transformed",
+                         "From PCA EPA data, Rate of healthcare-related businesses, log-transformed")
 names(type_choice_names) <- type_choice_values
-#names(notes_choice_values) <- type_choice_values
-
-#, "insecticide_ln_x", "gini_est_x", "std_coal_prim_pop_ln_y","hc_env_rate_ln_x"
-# , "Insecticide Applied","Income Inequality", "Proportion of Coal Mines", "Healthcare-related Businesses"
-# , "From PCA EPA data, Insecticide applied in pounds, log-transformed","From PCA EPA data, Measurement of income inequality in proportion",
-# "From PCA EPA data, Mines per county population, log-transformed","From PCA EPA data, Rate of healthcare-related businesses, log-transformed")
+names(notes_choice_values) <- type_choice_values
 
 # UI
 ui <- 
@@ -56,7 +55,8 @@ ui <-
                                      value = FALSE, 
                                      width = NULL),
                      
-                     mainPanel(leafletOutput(outputId = "map")))
+                     mainPanel(leafletOutput(outputId = "map"),
+                               textOutput(outputId = "text")))
 
 
 
@@ -95,6 +95,7 @@ server <- function(input, output, session){
     ) %>% lapply(htmltools::HTML)
     
     
+    
     leafletProxy("map") %>%
       clearShapes() %>%
       clearControls() %>%
@@ -121,6 +122,8 @@ server <- function(input, output, session){
           direction = "auto")) %>%
       addLegend(colors = pal_colors, labels = pal_labs, 
                 position = "bottomright", title = input$typevar)
+    
+    
   })
     
 
@@ -139,6 +142,10 @@ server <- function(input, output, session){
                              label = paste("Superfund Site:", super_counties$county))
           }
         })
+      
+      output$text <- renderText ({
+        paste("Notes:", notes_choice_values[type_choice_values == input$typevar])
+      })
 }
 
 shinyApp(ui = ui, server = server)
