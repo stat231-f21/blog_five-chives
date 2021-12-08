@@ -128,7 +128,7 @@ server <- function(input, output) {
       layer(data = data_for_map(), 
             geom = "polygon", stat = "identity", position = "identity") +
       geom_polygon(color = NA) +
-      scale_fill_gradientn(colours = heat.colors(10)) +
+      scale_fill_gradientn(colours = terrain.colors(10)) +
       coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
       theme(legend.position="bottom") +
       labs(x = "longitude",
