@@ -37,7 +37,7 @@ options(knitr.kable.NA = '')
 
 # Introduction
 
-In Louisiana, a row of toxic waste producing plants has gained national attention. In this area, large corporations continue to release larger and larger amounts of cancer-causing chemicals into the environment, and the effects on community health have been detrimental enough for this area to receive the name "Cancer Alley". The impacts of this unregulated pollution are not equally distributed: the groups at risk are predominantly black and low-income communities. Around the country, industries release fatal amounts of toxic chemicals into our environment, and underprivileged communities are most commonly the victims of these actions. The unequal distribution of wealth and power in our country, created by social systems that protect certain groups and leave others behind, has deep, historically established effects that extend even to the biological level. This is realized in the entangled relationship between sociodemographic inequality in the United States and toxicity in the environment. An individual's place within these imbricated factors is out of their control, and, yet, they can become major determinant's of an individual's health and wellbeing. 
+In Louisiana, a row of toxic waste producing plants has gained national attention. In this area, large corporations continue to release larger and larger amounts of cancer-causing chemicals into the environment, and the effects on community health have been detrimental enough for this area to receive the name "Cancer Alley". The impacts of this unregulated pollution are not equally distributed: the groups at risk are predominantly black and low-income communities. Around the country, industries release fatal amounts of toxic chemicals into our environment, and underprivileged communities are most commonly the victims of these actions. The unequal distribution of wealth and power in our country, created by social systems that protect certain groups and leave others behind, has deep, historically established effects that extend even to the biological level. This is realized in the entangled relationship between sociodemographic inequality in the United States and toxicity in the environment. An individual's place within these imbricated factors is out of their control, and, yet, they can become major determinants of an individual's health and wellbeing. 
 
 ## Questions
 
@@ -51,9 +51,9 @@ In Louisiana, a row of toxic waste producing plants has gained national attentio
 
 # Data
 
-In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the Environmental Protection Agency (EPA) and the Center for Disease Control (CDC). We downloaded the data on 9/28/21. We scraped data on Superfund sites, which are industrial sites considered a national priority due to their pollution level, from Wikipedia on 10/2/21. 
+In order to analyze environmental and sociodemographic factors related to mortality rates, we used data from the [Environmental Protection Agency (EPA)](https://edg.epa.gov/EPADataCommons/public/ORD/CPHEA/EQI_2006_2010/) and the [Center for Disease Control (CDC)](https://wonder.cdc.gov/controller/datarequest/D76). We downloaded the data on 9/28/21. Importantly, we used the environmental quality index (EQI) calculated the EPA, which assesses pollution using a variety of factors. We scraped data on Superfund sites, which are industrial sites considered a national priority due to their pollution level, from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Superfund_sites) on 10/2/21. 
 
-In order to analyze research pertaining to mortality causes, we scraped abstracts from a PubMed search on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we specified these words to be either in the title or the abstract. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words). 
+In order to analyze research pertaining to mortality causes, we scraped abstracts from a [PubMed search](https://pubmed.ncbi.nlm.nih.gov/?term=%28%28%28mortality%5BTitle%2FAbstract%5D%29+AND+%28causes%5BTitle%2FAbstract%5D%29%29+OR+%28determinants%5BTitle%2FAbstract%5D%29%29+AND+%28united+states%29&sort=&filter=simsearch1.fha&filter=pubt.journalarticle&filter=hum_ani.humans&filter=lang.english&filter=simsearch1.fha&filter=pubt.journalarticle&filter=hum_ani.humans&filter=lang.english) on 10/29/21. Search inputs included "mortality" AND "cause" OR "determinant", and we specified these words to be either in the title or the abstract. We unnested individual words from the abstracts, and then we retained only words of interest (e.g. we removed words like "the", "results", or "mortality" which would not provide interesting information, see word options in the network visualization for the full list of retained words). 
 
 # Results
 
@@ -163,7 +163,7 @@ Ultimately, it’s hard to quantify all the results that we can obtain from this
 
 ## Inter-Variable Relationships
 
-Further than just looking at the distribution of variables of interest nationwide and statewide, we were further interested in looking at inter-variable relationships and allowing users to explore relationships of interest. To aid this, I created 2 additional Shiny apps: an interactive line graph and an interactive app that produces a simple linear regression output for any 2 variables of interest.
+Further than just looking at the distribution of variables of interest nationwide and statewide, we were  interested in looking at inter-variable relationships and allowing users to explore relationships of interest. To aid this, I created 2 additional Shiny apps: an interactive line graph and an interactive app that produces a simple linear regression output for any 2 variables of interest.
 
 ### Interactive Line Graphs
 
@@ -216,37 +216,13 @@ Just like in the previous Shiny app, there are many insights that can be drawn f
 
 Ultimately, this is just one question resulting from one bivariate analysis, but there are many such questions and considerations that a user can explore using this application.
 
-## Mortality rate vs. Income
-
-```{r death-income, fig.width = 6, fig.height = 4}
-slr_data <- read_csv("final_data.csv") %>% 
-  select(med_income = ln_hh_inc_x, 
-         mortality_rate = rate) %>% 
-  mutate(mortality_rate = mortality_rate * 1000)
-
-theme_set(theme_classic())
-
-ggplot(slr_data, aes(x = med_income, y = (mortality_rate))) +
-  geom_point(color = "darkgray", alpha = .6, shape = 20) +
-  geom_smooth(method = "lm", se = FALSE, color = "#0047AB") +
-  xlab("Median Income (ten thousand dollars)") +
-  ylab("Mortality Rate (deaths per 1,000 people)") +
-  labs(title = "Relationship between median income and mortality", 
-       subtitle = "U.S. counties, 2006-2010", 
-       caption = "Data from EPA and CDC")
-
-sjPlot::tab_model(lm(mortality_rate ~ med_income, data = slr_data))
-```
-
-There is a statistically significant negative linear relationship between mortality rate and median income in counties in the US from 2006-2010. 
-
 ## Word counts in research abstracts {.tabset .tabset-fade .tabset-pills}
 
 ### Animated bar chart
 
 ![](img/gganim2.gif)
 
-In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts.
+In the above animation, the top 10 words up until 2011 do not contain the word "social". In 2011, though, "social" enters the top ten words, and its ranking increases until 2021, when it is the most used word in research abstracts. This shows the rise in prevalence of sociodemographic factors in the scientific research community. 
 
 ### Code and methods
 
@@ -281,11 +257,11 @@ animate(anim, #object to create gif
  knitr::include_app("https://eyzhang24.shinyapps.io/text_analysis/", height = "650px")
 ```
 
-In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, "social" supersedes even the word "mortality" in its centrality. By 2021, we see the words "disparities" and "racial" enter the top 5 central words in abstracts. 
+In the above network, we use strength, a weighted measure of the degree of each word, to measure centrality. Initially, sociodemographic words tend to not be central to the network. Over time, though, sociodemographic factors rise in centrality. In 2017, "social" supersedes even the word "mortality" in its centrality. By 2021, we see the words "disparities" and "racial" enter the top 5 central words in abstracts. This shows both the rise in consideration of sociodemographic factors and, promisingly, the accompanying acknowledgement of their unequal distribution and the role that race and ethnicity play. 
 
 ### Code and methods
 
-We were interested in whether two word were included in the same research abstract. We did not give extra weight to connections that occured multiple times in the same research abstract. Thus, when computing data for our network, we only considered whether or not a connection shows up at least one time in each research abstract. The weights for our edges thus reflect the number of abstracts that contain two individual words. 
+We were interested in whether two words were included in the same research abstract. We did not give extra weight to connections that occured multiple times in the same research abstract. Thus, when computing data for our network, we only considered whether or not a connection showed up at least one time in each research abstract.
 
 To create a list of connections between words and how often those connections occured, we created a co-occurence matrix of words individual abstract. The below code demonstrates how we prepared our data from `abstract_words`, which was a dataframe which contained a column with the unique identifier for each abstract, the year that abstract was published in, and a word of interest from that abstract.  
 
@@ -318,7 +294,7 @@ The map displaying county data shows that there are some geographic factors that
 
 From the second interactive map and associated plots, tt’s evident that many socio demographic factors interact with each other to explain some of the geographic inequalities and environmental considerations throughout the US. In looking at the map of the entire US, it is evident that the different socio demographic indices vary between states, and in looking closer at the individual states, it is clear that these indices vary even within states between counties. Looking at specific states also highlights how some indices have a normal distribution in some while a skewed distribution in others. After examining these statewide and nationwide differences, one might wonder what this all means. Looking at the bivariate relationships highlights the importance and huge implications for this, for example, in looking at how fungicide application has strong linear relationship with total deaths and a t-test for slope in a simple linear regression model yields a p-value of 0. The map shows that fungicide use is not evenly spread throughout the nation, and it’s important to grapple with what factors contribute to this distribution. 
 
-Thus, we have substantially confirmed the relationship between sociodemographic and environmental factors and mortality. Our analysis of research abstracts demonstrates the increasing acknowledgement of this relationship. The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in connectedness of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. In particular, the rise of the words "racial" and "disparities" demonstrate acknowledgement of the structural inequalities inherent to these issues. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
+Thus, we have substantially confirmed the relationship between sociodemographic and environmental factors and mortality. Our analysis of research abstracts demonstrates the increasing acknowledgement of this relationship. The recent significant increase in the word "social" in research abstracts suggests that sociodemographic determinants are being increasingly acknowledged in the scientific research community. The recent increase in the centrality of sociodemographic words in abstracts also suggests these determinants are increasingly included in the majority of the body of mortality research. In particular, the rise of the words "racial" and "disparities" demonstrate acknowledgement of the structural inequalities inherent to these issues. These findings are promising; slowly, the rampant inequality in health outcomes around the United States is becoming acknowledged in research communication. 
 
 ## Limitations and Future Directions
 
