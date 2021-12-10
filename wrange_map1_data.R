@@ -16,9 +16,9 @@ library(maptools)
 library(tmap)
 
 # Grabbing final data
-final_data <- read_csv("final_data.csv")
+final_data <- read_csv("data/final_data.csv")
 
-counties <- geojsonio::geojson_read("us-counties.json", what = "sp")
+counties <- geojsonio::geojson_read("data/us-counties.json", what = "sp")
 
 final_data <- final_data %>%
   mutate(GEO_ID = paste("0500000US", county_code, sep = ""))
@@ -38,7 +38,7 @@ counties@data <- counties@data[!duplicated(counties@data$GEO_ID), ]
 final_data_markers <- filter(final_data, 
                              "TRUE" %in% superfund)
 
-counties_markers <- read_csv("uscounties.csv") %>%
+counties_markers <- read_csv("data/uscounties.csv") %>%
   mutate(county = paste(county_full, state_id, sep = ", "))
 
 counties_markers <- final_data_markers %>%
@@ -57,8 +57,8 @@ row.names(counties_df) <- sapply(slot(counties, "polygons"),
                                  function(x) slot(x, "ID"))
 counties <- SpatialPolygonsDataFrame(counties, counties_df)
 
-write_csv(counties_markers, "counties_markers.csv")
-geojsonio::geojson_write(input = counties, file = "counties_map.geojson",
+write_csv(counties_markers, "leaflet_map_1/counties_markers.csv")
+geojsonio::geojson_write(input = counties, file = "leaflet_map_1/counties_map.geojson",
                          what = "sp", overwrite = T)
 
 # Example map
